@@ -1,23 +1,34 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
-class Admin(models.Model):
-    id = models.AutoField(primary_key=True)
+class UserManager(BaseUserManager):
+
+    use_in_migration = True
+
+    def create_user(self, username, password, **extra_fields):
+        if not username:
+            raise ValueError("Username is Required")
+        user = self.model(username=username, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, username, password, **extra_fields):
+        extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("can_add", True)
+        extra_fields.setdefault("can_view", True)
+        extra_fields.setdefault("view_level", "GBL")
+
+        return self.create_user(username, password, **extra_fields)
+
+
+class UserData(AbstractUser):
+
     username = models.CharField(max_length=12, unique=True)
-    password = models.CharField(max_length=24)
+    password = models.CharField(max_length=256)
     email = models.EmailField(max_length=50, unique=True)
-    last_login_time = models.TimeField()
-
-    class Meta:
-        db_table = "admin"
-
-
-class User(models.Model):
-    id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=12, unique=True)
-    password = models.CharField(max_length=24)
-    email = models.EmailField(max_length=50, unique=True)
-    hub_tag = models.CharField(max_length=50)
+    hub_tag = models.CharField(max_length=12)
     can_add = models.BooleanField(default=False)
     can_view = models.BooleanField(default=False)
     view_level = models.CharField(
@@ -25,10 +36,18 @@ class User(models.Model):
         default="NONE",
         choices=(("NONE", "NONE"), ("SELF", "SELF"), ("HUB", "HUB"), ("GBL", "GBL")),
     )
-    last_login_time = models.TimeField()
+    date_joined = models.DateTimeField(auto_now_add=True)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ["password", "email"]
+
+    def __str__(self):
+        return self.username
 
     class Meta:
-        db_table = "user"
+        db_table = "user_data"
 
 
 class Hub(models.Model):
