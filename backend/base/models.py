@@ -15,6 +15,7 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, username, password, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("can_add", True)
         extra_fields.setdefault("can_view", True)
@@ -50,25 +51,25 @@ class UserData(AbstractUser):
         db_table = "user_data"
 
 
-class Hub(models.Model):
+class HubData(models.Model):
     id = models.AutoField(primary_key=True)
     tag = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=200)
 
     class Meta:
-        db_table = "hub"
+        db_table = "hub_data"
 
 
-class Evidence(models.Model):
+class EvidenceData(models.Model):
     id = models.AutoField(primary_key=True)
     tag = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=200)
-    uploader_tag = models.CharField(max_length=50)
-    hub_tag = models.CharField(max_length=50)
+    uploader = models.ForeignKey(UserData, on_delete=models.SET_NULL, null=True)
+    hub = models.ForeignKey(HubData, on_delete=models.SET_NULL, null=True)
     upload_time = models.TimeField()
     file = models.FileField(upload_to="evidence/")
 
     class Meta:
-        db_table = "evidence"
+        db_table = "evidence_data"
