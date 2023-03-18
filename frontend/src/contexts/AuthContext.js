@@ -10,6 +10,7 @@ export default AuthContext;
 export const AuthProvider = ({ children }) => {
   const [authTokens, setAuthTokens] = useState(() => localStorage.getItem("authTokens") ? JSON.parse(localStorage.getItem("authTokens")) : null);
   const [user, setUser] = useState(() => localStorage.getItem("authTokens") ? jwt_decode(localStorage.getItem("authTokens")) : null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   let loginUser = async (e) => {
@@ -48,7 +49,13 @@ export const AuthProvider = ({ children }) => {
     const url = "http://localhost:8000/token/refresh/";
     const headers = { "Content-Type": "application/json" };
     const body = JSON.stringify({ "refresh": authTokens?.refresh });
-    const response = await axios.post(url, body, { headers });
+    const response = await axios.post(url, body, { headers })
+      .then((res) => {
+        return res;
+      })
+      .catch((res) => {
+        return res;
+      });
     const data = response.data;
 
     if (response.status === 200) {
@@ -59,28 +66,39 @@ export const AuthProvider = ({ children }) => {
     else {
       logoutUser();
     }
+
+    if (loading) {
+      setLoading(false);
+    }
   };
 
   let contextData = {
     user: user,
+    setUser: setUser,
     authTokens: authTokens,
+    setAuthTokens: setAuthTokens,
+
     loginUser: loginUser,
     logoutUser: logoutUser,
   };
 
   useEffect(() => {
-    let time = 1000 * 275;
+    if (loading) {
+      updateToken();
+    }
+
+    let time = 1000 * 45;
     let interval = setInterval(() => {
       if (authTokens) {
         updateToken();
       }
     }, time);
     return () => clearInterval(interval);
-  }, [authTokens]);
+  }, [authTokens, loading]);
 
   return (
     <AuthContext.Provider value={contextData}>
-      {children}
+      {loading ? null : children}
     </AuthContext.Provider >
   )
 }
