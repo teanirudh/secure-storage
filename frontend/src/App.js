@@ -8,6 +8,7 @@ import Login from "./screens/Login";
 import PrivateRoute from "./utils/PrivateRoute";
 import { theme } from "./utils/ThemeProvider";
 import AdminDashboard from "./screens/AdminDashboard";
+import UserDashboard from "./screens/UserDashboard";
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
             <Routes>
               <Route path="/" element={<Login />} exact />
               <Route path="/login" element={<Login />} />
-              <Route path="/dashboard" element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
+              <Route path="/admin/dashboard" element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
+              <Route path="/user/dashboard" element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
             </Routes>
           </AuthProvider>
         </Router>

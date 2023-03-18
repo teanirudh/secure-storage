@@ -31,7 +31,14 @@ export const AuthProvider = ({ children }) => {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
       localStorage.setItem("authTokens", JSON.stringify(data));
-      navigate("/dashboard");
+
+      const isAdmin = jwt_decode(data.access).is_superuser;
+      if (isAdmin) {
+        navigate("/admin/dashboard");
+      }
+      else {
+        navigate("/user/dashboard");
+      }
     }
     else {
       alert("Invalid username or password");
