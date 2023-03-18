@@ -1,6 +1,6 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.serializers import ModelSerializer
-from .models import EvidenceData
+from .models import User, Hub, Evidence
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -8,12 +8,24 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         token["username"] = user.username
-        token["is_superuser"] = user.is_superuser
+        token["is_admin"] = user.is_admin
         token["view_level"] = user.view_level
         return token
 
 
-class EvidenceDataSerializer(ModelSerializer):
+class UserSerializer(ModelSerializer):
     class Meta:
-        model = EvidenceData
+        model = User
+        fields = "__all__"
+
+
+class HubSerializer(ModelSerializer):
+    class Meta:
+        model = Hub
+        fields = "__all__"
+
+
+class EvidenceSerializer(ModelSerializer):
+    class Meta:
+        model = Evidence
         fields = "__all__"

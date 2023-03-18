@@ -86,7 +86,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "backend.urls"
 
-AUTH_USER_MODEL = "base.UserData"
+AUTH_USER_MODEL = "base.User"
 
 TEMPLATES = [
     {

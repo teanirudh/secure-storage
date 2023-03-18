@@ -6,13 +6,13 @@ from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .models import EvidenceData
-from .serializers import EvidenceDataSerializer, MyTokenObtainPairSerializer
-
-
-class admin_login(APIView):
-    def post(self, request):
-        pass
+from .models import User, Hub, Evidence
+from .serializers import (
+    UserSerializer,
+    HubSerializer,
+    EvidenceSerializer,
+    MyTokenObtainPairSerializer,
+)
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -20,9 +20,18 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 
 @permission_classes([IsAuthenticated])
-class evidence_data(APIView):
+class user_view(APIView):
     def get(self, request):
-        user = request.user
-        evidence = EvidenceData.objects.all()
-        serializer = EvidenceDataSerializer(evidence, many=True)
-        return Response(serializer.data)
+        pass
+
+
+@permission_classes([IsAuthenticated])
+class hub_view(APIView):
+    def get(self, request):
+        pass
+
+
+@permission_classes([IsAuthenticated])
+class evidence_view(APIView):
+    def get(self, request):
+        pass
