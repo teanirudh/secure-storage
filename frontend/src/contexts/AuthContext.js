@@ -52,32 +52,6 @@ export const AuthProvider = ({ children }) => {
     navigate("/login");
   };
 
-  let updateToken = async () => {
-    const url = "http://localhost:8000/token/refresh/";
-    const headers = { "Content-Type": "application/json" };
-    const body = JSON.stringify({ "refresh": authTokens?.refresh });
-    const response = await axios.post(url, body, { headers })
-      .then((res) => {
-        return res;
-      })
-      .catch((res) => {
-        return res;
-      });
-    const data = response.data;
-
-    if (response.status === 200) {
-      setAuthTokens(data);
-      setUser(jwt_decode(data.access));
-      localStorage.setItem("authTokens", JSON.stringify(data));
-    }
-    else {
-      logoutUser();
-    }
-
-    if (loading) {
-      setLoading(false);
-    }
-  };
 
   let contextData = {
     user: user,
@@ -90,17 +64,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (loading) {
-      updateToken();
+    if (authTokens) {
+      setUser(jwt_decode(authTokens.access));
     }
-
-    let time = 1000 * 45;
-    let interval = setInterval(() => {
-      if (authTokens) {
-        updateToken();
-      }
-    }, time);
-    return () => clearInterval(interval);
   }, [authTokens, loading]);
 
   return (
