@@ -2,6 +2,22 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
+def gen_hub_tag():
+    last_id = Hub.objects.all().order_by("id").last()
+    last_id = 1 if last_id is None else last_id.id + 1
+    return "HUB" + str(last_id).zfill(3)
+
+
+class Hub(models.Model):
+    id = models.AutoField(primary_key=True)
+    tag = models.CharField(max_length=6, default=gen_hub_tag, editable=False)
+    name = models.CharField(max_length=12)
+    description = models.CharField(max_length=50)
+
+    class Meta:
+        db_table = "hub"
+
+
 class UserManager(BaseUserManager):
 
     use_in_migration = True
@@ -26,12 +42,13 @@ class User(AbstractBaseUser):
     username = models.CharField(max_length=12, unique=True)
     password = models.CharField(max_length=256)
     email = models.EmailField(max_length=48, unique=True)
+    hub = models.ForeignKey(Hub, on_delete=models.SET_NULL, null=True)
     can_add = models.BooleanField(default=False)
     can_view = models.BooleanField(default=False)
     view_level = models.CharField(
         max_length=4,
         default="NONE",
-        choices=(("NONE", "NONE"), ("SELF", "SELF"), ("HUB", "HUB"), ("GBL", "GBL")),
+        choices=(("NONE", "NONE"), ("USER", "USER"), ("HUB", "HUB"), ("GBL", "GBL")),
     )
     is_admin = models.BooleanField(default=False)
 
@@ -56,22 +73,6 @@ class User(AbstractBaseUser):
         db_table = "user"
 
 
-def gen_hub_tag():
-    last_id = Hub.objects.all().order_by("id").last()
-    last_id = 1 if last_id is None else last_id.id + 1
-    return "HUB" + str(last_id).zfill(3)
-
-
-class Hub(models.Model):
-    id = models.AutoField(primary_key=True)
-    tag = models.CharField(max_length=6, default=gen_hub_tag, editable=False)
-    name = models.CharField(max_length=12)
-    description = models.CharField(max_length=50)
-
-    class Meta:
-        db_table = "hub"
-
-
 def gen_evidence_tag():
     last_id = Evidence.objects.all().order_by("id").last()
     last_id = 1 if last_id is None else last_id.id + 1
@@ -85,8 +86,8 @@ class Evidence(models.Model):
     description = models.CharField(max_length=100)
     uploader = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     hub = models.ForeignKey(Hub, on_delete=models.SET_NULL, null=True)
-    upload_time = models.TimeField()
-    file = models.FileField(upload_to="evidence/")
+    upload_time = models.DateTimeField()
+    file = models.FileField(upload_to="evidence/", null=True)
 
     class Meta:
         db_table = "evidence"
