@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
+import dayjs from "dayjs";
 import CustomTable from "../components/CustomTable";
+import useAxios from "../utils/useAxios";
 
 const userTableColumns = [
   {
@@ -12,16 +14,12 @@ const userTableColumns = [
     name: "User ID",
   },
   {
-    key: "name",
-    name: "Name",
+    key: "hub",
+    name: "Hub ID",
   },
   {
-    key: "noe",
-    name: "Number of Evidences",
-  },
-  {
-    key: "lastActivity",
-    name: "Last Activity",
+    key: "last_login",
+    name: "Last Login",
   },
 ];
 const evidenceTableColumns = [
@@ -30,36 +28,61 @@ const evidenceTableColumns = [
     name: "Evidence ID",
   },
   {
-    key: "date",
-    name: "Creation Date",
+    key: "upload_time",
+    name: "Upload Time",
   },
   {
-    key: "userId",
-    name: "User ID",
-  },
-  {
-    key: "name",
-    name: "User Name",
-  },
-];
-const userTableValues = [
-  {
-    id: "28937828937",
-    name: "John",
-    noe: "10",
-    lastActivity: "12-11-1999",
-  },
-];
-const evidenceTableValues = [
-  {
-    id: "8372837283",
-    date: "12-11-1999",
-    userId: "a837sh09890",
-    name: "John",
+    key: "uploader",
+    name: "Uploader ID",
   },
 ];
 
 const AdminDashboard = () => {
+  const axiosInstance = useAxios();
+
+  const [userList, setUserList] = useState([]);
+  const [evidenceList, setEvidenceList] = useState([]);
+
+  const [userCount, setUserCount] = useState(0);
+  const [evidenceCount, setEvidenceCount] = useState(0);
+  const [totalUserCount, setTotalUserCount] = useState(0);
+  const [totalEvidenceCount, setTotalEvidenceCount] = useState(0);
+
+  const getUsers = async () => {
+    const response = await axiosInstance.get("/user/");
+    setTotalUserCount(response.data.length);
+    const newList = [];
+    response.data.forEach(user => {
+      if (dayjs().diff(dayjs(user.last_login), "day") <= 1) {
+        const lastLogin = dayjs(user.last_login).format("ddd MMM DD hh:mm:ss");
+        const newUser = { "id": user.id, "hub": user.hub, "last_login": lastLogin };
+        newList.push(newUser);
+      }
+    });
+    setUserList(newList);
+    setUserCount(newList.length);
+  };
+
+  const getEvidence = async () => {
+    const response = await axiosInstance.get("/evidence/");
+    setTotalEvidenceCount(response.data.length);
+    const newList = [];
+    response.data.forEach(evidence => {
+      if (dayjs().diff(dayjs(evidence.upload_time), "day") <= 1) {
+        const uploadTime = dayjs(evidence.upload_time).format("ddd MMM DD hh:mm:ss");
+        const newEvidence = { "id": evidence.id, "uploader": evidence.uploader, "upload_time": uploadTime };
+        newList.push(newEvidence);
+      }
+    });
+    setEvidenceList(newList);
+    setEvidenceCount(newList.length);
+  };
+
+  useEffect(() => {
+    getUsers();
+    getEvidence();
+  }, []);
+
   return (
     <Box sx={{ flexGrow: 1, margin: 10 }}>
       <Grid
@@ -85,10 +108,10 @@ const AdminDashboard = () => {
                 Users
               </Typography>
               <Typography sx={{ fontSize: 30 }} gutterBottom>
-                10
+                {totalUserCount}
               </Typography>
               <Typography sx={{ fontSize: 12 }} color="green" gutterBottom>
-                +1 in the last day
+                {userCount} active in the last day
               </Typography>
             </CardContent>
           </Card>
@@ -104,13 +127,13 @@ const AdminDashboard = () => {
               }}
             >
               <Typography sx={{ fontSize: 14 }} gutterBottom>
-                Evidence Count
+                Evidence
               </Typography>
               <Typography sx={{ fontSize: 30 }} gutterBottom>
-                50
+                {totalEvidenceCount}
               </Typography>
               <Typography sx={{ fontSize: 12 }} color="green" gutterBottom>
-                +10 in the last day
+                {evidenceCount} added in the last day
               </Typography>
             </CardContent>
           </Card>
@@ -118,12 +141,17 @@ const AdminDashboard = () => {
       </Grid>
       <Grid container spacing={2} marginTop={10}>
         <Grid item xs={6}>
-          <CustomTable columns={userTableColumns} values={userTableValues} />
+          <CustomTable
+            columns={userTableColumns}
+            values={userList}
+            emptyMessage="No recent user activity"
+          />
         </Grid>
         <Grid item xs={6}>
           <CustomTable
             columns={evidenceTableColumns}
-            values={evidenceTableValues}
+            values={evidenceList}
+            emptyMessage="No recent upload activity"
           />
         </Grid>
       </Grid>
