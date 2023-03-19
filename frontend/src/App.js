@@ -7,6 +7,8 @@ import { theme } from "./utils/ThemeProvider";
 import AppBar from "./components/AppBar";
 import Login from "./screens/Login";
 import AdminDashboard from "./screens/AdminDashboard";
+import AdminViewUsers from "./screens/AdminViewUsers";
+import AdminViewEvidence from "./screens/AdminViewEvidence";
 import UserDashboard from "./screens/UserDashboard";
 
 function App() {
@@ -21,6 +23,8 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/admin">
                 <Route path="/admin/dashboard" element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
+                <Route path="/admin/users" element={<PrivateRoute><AdminViewUsers /></PrivateRoute>} />
+                <Route path="/admin/evidence" element={<PrivateRoute><AdminViewEvidence /></PrivateRoute>} />
               </Route>
               <Route path="/user">
                 <Route path="/user/dashboard" element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
