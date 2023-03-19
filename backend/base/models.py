@@ -2,15 +2,14 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
-def gen_hub_tag():
+def gen_hub_pk():
     last_id = Hub.objects.all().order_by("id").last()
-    last_id = 1 if last_id is None else last_id.id + 1
-    return "HUB" + str(last_id).zfill(3)
+    last_id = int(last_id.id[4:]) + 1 if last_id else 1
+    return "HUBX" + str(last_id).zfill(6)
 
 
 class Hub(models.Model):
-    id = models.AutoField(primary_key=True)
-    tag = models.CharField(max_length=6, default=gen_hub_tag, editable=False)
+    id = models.CharField(primary_key=True, max_length=10, default=gen_hub_pk)
     name = models.CharField(max_length=12)
     description = models.CharField(max_length=50)
 
@@ -37,8 +36,14 @@ class UserManager(BaseUserManager):
         return self.create_user(username, password, **extra_fields)
 
 
+def gen_user_pk():
+    last_id = User.objects.all().order_by("id").last()
+    last_id = int(last_id.id[4:]) + 1 if last_id else 1
+    return "USER" + str(last_id).zfill(6)
+
+
 class User(AbstractBaseUser):
-    id = models.AutoField(primary_key=True)
+    id = models.CharField(primary_key=True, max_length=10, default=gen_user_pk)
     username = models.CharField(max_length=12, unique=True)
     password = models.CharField(max_length=256)
     email = models.EmailField(max_length=48, unique=True)
@@ -51,6 +56,7 @@ class User(AbstractBaseUser):
         choices=(("NONE", "NONE"), ("USER", "USER"), ("HUB", "HUB"), ("GBL", "GBL")),
     )
     is_admin = models.BooleanField(default=False)
+    last_login = models.DateTimeField(auto_now=True)
 
     objects = UserManager()
 
@@ -73,15 +79,14 @@ class User(AbstractBaseUser):
         db_table = "user"
 
 
-def gen_evidence_tag():
+def gen_evidence_pk():
     last_id = Evidence.objects.all().order_by("id").last()
-    last_id = 1 if last_id is None else last_id.id + 1
-    return "EVID" + str(last_id).zfill(4)
+    last_id = int(last_id.id[4:]) + 1 if last_id else 1
+    return "EVID" + str(last_id).zfill(6)
 
 
 class Evidence(models.Model):
-    id = models.AutoField(primary_key=True)
-    tag = models.CharField(max_length=8, default=gen_evidence_tag, editable=False)
+    id = models.CharField(primary_key=True, max_length=10, default=gen_evidence_pk)
     name = models.CharField(max_length=24)
     description = models.CharField(max_length=100)
     uploader = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
