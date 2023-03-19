@@ -130,7 +130,7 @@ class EvidenceView(APIView):
             evidence.description = request.data["description"]
             evidence.uploader = User.objects.get(id=request.user.id)
             evidence.hub = Hub.objects.get(id=request.user.hub_id)
-            evidence.upload_time = timezone.now()
+            evidence.upload_time = timezone.now().strftime("%Y-%m-%d %H:%M:%S")
             evidence.file = request.data["file"] if "file" in request.data else None
             evidence.save()
         except Exception as e:

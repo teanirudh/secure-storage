@@ -10,7 +10,7 @@ export default AuthContext;
 export const AuthProvider = ({ children }) => {
   const [authTokens, setAuthTokens] = useState(() => localStorage.getItem("authTokens") ? JSON.parse(localStorage.getItem("authTokens")) : null);
   const [user, setUser] = useState(() => localStorage.getItem("authTokens") ? jwt_decode(localStorage.getItem("authTokens")) : null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   let loginUser = async (e) => {
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
       setUser(jwt_decode(data.access));
       localStorage.setItem("authTokens", JSON.stringify(data));
 
-      const isAdmin = jwt_decode(data.access).is_superuser;
+      const isAdmin = jwt_decode(data.access).is_admin;
       if (isAdmin) {
         navigate("/admin/dashboard");
       }
@@ -67,6 +67,7 @@ export const AuthProvider = ({ children }) => {
     if (authTokens) {
       setUser(jwt_decode(authTokens.access));
     }
+    setLoading(false);
   }, [authTokens, loading]);
 
   return (
