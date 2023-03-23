@@ -10,4 +10,9 @@ urlpatterns = [
     path("user/", views.UserView.as_view(), name="user"),
     path("hub/", views.HubView.as_view(), name="hub"),
     path("evidence/", views.EvidenceView.as_view(), name="evidence"),
+    path(
+        "evidence/download/",
+        views.EvidenceDownloadView.as_view(),
+        name="evidence_download",
+    ),
 ]

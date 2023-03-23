@@ -10,8 +10,8 @@ def gen_hub_pk():
 
 class Hub(models.Model):
     id = models.CharField(primary_key=True, max_length=10, default=gen_hub_pk)
-    name = models.CharField(max_length=12)
-    description = models.CharField(max_length=50)
+    name = models.CharField(max_length=64, unique=True)
+    description = models.CharField(max_length=256)
 
     class Meta:
         db_table = "hub"
@@ -46,7 +46,7 @@ class User(AbstractBaseUser):
     id = models.CharField(primary_key=True, max_length=10, default=gen_user_pk)
     username = models.CharField(max_length=12, unique=True)
     password = models.CharField(max_length=256)
-    email = models.EmailField(max_length=48, unique=True)
+    email = models.EmailField(max_length=64, unique=True)
     hub = models.ForeignKey(Hub, on_delete=models.SET_NULL, null=True)
     can_add = models.BooleanField(default=False)
     can_view = models.BooleanField(default=False)
@@ -87,12 +87,15 @@ def gen_evidence_pk():
 
 class Evidence(models.Model):
     id = models.CharField(primary_key=True, max_length=10, default=gen_evidence_pk)
-    name = models.CharField(max_length=24)
-    description = models.CharField(max_length=100)
+    name = models.CharField(max_length=64)
+    description = models.CharField(max_length=256)
     uploader = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     hub = models.ForeignKey(Hub, on_delete=models.SET_NULL, null=True)
     upload_time = models.DateTimeField()
-    file = models.FileField(upload_to="evidence/", null=True)
+    hash = models.CharField(max_length=64, null=True)
+    file_name = models.CharField(max_length=256, null=True)
+    file_path = models.CharField(max_length=512, null=True)
 
     class Meta:
         db_table = "evidence"
+        verbose_name_plural = "evidence"

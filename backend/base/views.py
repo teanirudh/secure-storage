@@ -1,3 +1,4 @@
+import magic
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.views import APIView
@@ -7,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import make_password
 
+from .utils import generate_hash, encrypt_and_save, decrypt_and_retrieve
 from .models import User, Hub, Evidence
 from .serializers import (
     UserSerializer,
@@ -28,7 +30,8 @@ class UserView(APIView):
             serializer = UserSerializer(users, many=True)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         try:
@@ -49,7 +52,8 @@ class UserView(APIView):
             new_user.save()
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"success": "User added"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success": "User added"}, status=status.HTTP_200_OK)
 
     def patch(self, request):
         try:
@@ -63,7 +67,8 @@ class UserView(APIView):
             user.save()
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"success": "User changed"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success": "User changed"}, status=status.HTTP_200_OK)
 
 
 @permission_classes([IsAuthenticated])
@@ -78,7 +83,8 @@ class HubView(APIView):
             serializer = HubSerializer(hubs, many=True)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         try:
@@ -88,7 +94,8 @@ class HubView(APIView):
             hub.save()
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"success": "Hub added"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success": "Hub added"}, status=status.HTTP_200_OK)
 
     def patch(self, request):
         try:
@@ -99,7 +106,8 @@ class HubView(APIView):
             hub.save()
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"success": "Hub changed"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success": "Hub changed"}, status=status.HTTP_200_OK)
 
 
 @permission_classes([IsAuthenticated])
@@ -121,18 +129,46 @@ class EvidenceView(APIView):
             serializer = EvidenceSerializer(evidence, many=True)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         try:
             evidence = Evidence()
-            evidence.name = request.data["name"]
-            evidence.description = request.data["description"]
+            evidence.name = request.POST.get("name")
+            evidence.description = request.POST.get("description")
             evidence.uploader = User.objects.get(id=request.user.id)
             evidence.hub = Hub.objects.get(id=request.user.hub_id)
-            evidence.upload_time = timezone.now().strftime("%Y-%m-%d %H:%M:%S")
-            evidence.file = request.data["file"] if "file" in request.data else None
+            evidence.upload_time = timezone.now()
+            evidence.hash = request.POST.get("hash")
+
+            file = request.FILES.get("file")
+            if evidence.hash != generate_hash(file):
+                raise Exception("Hash does not match")
+            evidence.file_name = file.name
+            evidence.file_path = encrypt_and_save(file)
             evidence.save()
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"success": "Evidence added"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success": "Evidence added"}, status=status.HTTP_200_OK)
+
+
+@permission_classes([IsAuthenticated])
+class EvidenceDownloadView(APIView):
+    def post(self, request):
+        try:
+            id = request.POST.get("id")
+            evidence = Evidence.objects.get(id=id)
+            file_name = evidence.file_name
+            file_path = evidence.file_path
+            data = decrypt_and_retrieve(file_path)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(
+                data,
+                content_type=magic.Magic(mime=True).from_buffer(data),
+                headers={"Content-Disposition": f"attachment; filename={file_name}"},
+                status=status.HTTP_200_OK,
+            )

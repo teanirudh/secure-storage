@@ -25,8 +25,7 @@ const useAxios = () => {
     if (!accessExpired) return request;
 
     const response = await axios.post(`${baseURL}/token/refresh/`, { "refresh": authTokens.refresh });
-    const newTokens = Object.assign({}, response.data, { "refresh": authTokens.refresh });
-
+    const newTokens = { "access": response.data.access, "refresh": authTokens.refresh };
     localStorage.setItem("authTokens", JSON.stringify(newTokens));
     setAuthTokens(newTokens);
     setUser(jwt_decode(response.data.access));
