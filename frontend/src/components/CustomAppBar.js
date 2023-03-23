@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import AppBar from "@mui/material/AppBar";
@@ -10,17 +9,20 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupIcon from "@mui/icons-material/Group";
+import PlaceIcon from "@mui/icons-material/Place";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import AuthContext from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const CustomAppBar = () => {
-  const { logoutUser } = useContext(AuthContext);
+  const { user, logoutUser } = useContext(AuthContext);
   const [state, setState] = useState({ left: false });
+  const navigate = useNavigate();
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
@@ -35,16 +37,24 @@ const CustomAppBar = () => {
 
   const sideBarKeys = [
     {
-      text: "Create User",
-      icon: <PersonAddIcon />,
+      text: "Dashboard",
+      icon: <DashboardIcon />,
+      onClick: () => navigate("/admin/dashboard"),
     },
     {
-      text: "User list",
+      text: "Users",
       icon: <GroupIcon />,
+      onClick: () => navigate("/admin/view-users"),
     },
     {
-      text: "Evidence list",
+      text: "Evidence",
       icon: <LocalLibraryIcon />,
+      onClick: () => navigate("/admin/view-evidence"),
+    },
+    {
+      text: "Hubs",
+      icon: <PlaceIcon />,
+      onClick: () => navigate("/admin/view-hubs"),
     },
     {
       text: "Logout",
@@ -52,6 +62,7 @@ const CustomAppBar = () => {
       onClick: logoutUser,
     },
   ];
+
   const list = (anchor) => (
     <Box
       sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
@@ -81,22 +92,21 @@ const CustomAppBar = () => {
           color="inherit"
           aria-label="menu"
           sx={{ mr: 2 }}
-          onClick={toggleDrawer("left", true)}
+          onClick={user && toggleDrawer("left", true)}
         >
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Secure Storage Model
         </Typography>
-        <Button color="inherit">Login</Button>
       </Toolbar>
-      {<Drawer
+      <Drawer
         anchor={"left"}
         open={state["left"]}
         onClose={toggleDrawer("left", false)}
       >
         {list("left")}
-      </Drawer>}
+      </Drawer>
     </AppBar>
   );
 };
