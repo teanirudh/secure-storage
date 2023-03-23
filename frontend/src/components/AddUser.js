@@ -1,109 +1,181 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
+import Switch from '@mui/material/Switch';
 import Select from '@mui/material/Select';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
-import { Button } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import useAxios from '../utils/useAxios';
 
-export default function AddUser() {
-  const [age, setAge] = React.useState('');
+const AddUser = (props) => {
+  const axiosInstance = useAxios();
+  const { openUserModal, handleClose } = props;
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [canAdd, setCanAdd] = useState(false);
+  const [canView, setCanView] = useState(false);
+  const [viewLevel, setViewLevel] = useState("");
+  const [hubId, setHubId] = useState("");
+  const [hubList, setHubList] = useState([]);
+  const viewLevelList = [{ id: "NONE", name: "None" }, { id: "SELF", name: "Self" }, { id: "HUB", name: "Hub" }, { id: "GBL", name: "Global" }];
+
+  const getHubs = async () => {
+    const response = await axiosInstance.get("/hub/");
+    setHubList(response.data);
+  };
+
+  useEffect(() => {
+    getHubs();
+  }, []);
+
+  const clearForm = () => {
+    setUsername("");
+    setPassword("");
+    setEmail("");
+    setCanAdd(false);
+    setCanView(false);
+    setViewLevel("");
+    setHubId("");
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const body = {
+      username: username,
+      password: password,
+      email: email,
+      can_add: canAdd,
+      can_view: canView,
+      view_level: viewLevel,
+      hub_id: hubId,
+    }
+    await axiosInstance.post("/user/", body)
+      .then((res) => {
+        alert(res.data.success);
+        clearForm();
+        handleClose();
+        window.location.reload(false);
+      })
+      .catch((err) => {
+        alert(err.response.data.error);
+      });
   }
+
   return (
-    <Box
-      component="form"
-      sx={{
-        '& .MuiTextField-root': { m: 1, width: '25ch' },
-      }}
-      noValidate
-      autoComplete="off"
-    >
-      <FormControl>
-        <div>
-          <TextField
-            required
-            id="outlined-required"
-            label="Required"
-            defaultValue="username"
-          />
-          <TextField
-            required
-            id="outlined-password-input"
-            label="Password"
-            type="password"
-            autoComplete="current-password"
-          />
-          <TextField
-            required
-            id="outlined-required"
-            label="Required"
-            defaultValue="Email"
-          />
-
-          <FormLabel id="demo-radio-buttons-group-label">Add Evidence</FormLabel>
-          <RadioGroup
-            aria-labelledby="demo-radio-buttons-group-label"
-            defaultValue="female"
-            name="radio-buttons-group"
-          >
-            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-            <FormControlLabel value="No" control={<Radio />} label="No" />
-          </RadioGroup>
-
-          <FormLabel id="demo-radio-buttons-group-label">View Evidence</FormLabel>
-          <RadioGroup
-            aria-labelledby="demo-radio-buttons-group-label"
-            defaultValue="female"
-            name="radio-buttons-group"
-          >
-            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-            <FormControlLabel value="No" control={<Radio />} label="No" />
-          </RadioGroup>
-        </div>
-      </FormControl>
-
-      <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-        <InputLabel id="demo-select-small">Hub</InputLabel>
-        <Select
-          labelId="demo-select-small"
-          id="demo-select-small"
-          value={hub}
-          label="hub"
-          onChange={handleChange}
-        >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-        <InputLabel id="demo-select-small">View level</InputLabel>
-
-        <Select
-          labelId="demo-select-small"
-          id="demo-select-small"
-          value={level}
-          label="view_level"
-          onChange={handleChange}
-        >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-      </FormControl>
-      <Button variant="contained">Save</Button>
-    </Box>
+    <Modal
+      open={openUserModal}
+      onClose={handleClose}>
+      <Box
+        noValidate={true}
+        autoComplete="off"
+        sx={{ bgcolor: 'background.paper', width: '35%', margin: 'auto', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', position: 'absolute', padding: '18px', borderRadius: '10px' }}
+      >
+        <form onSubmit={handleSubmit}>
+          <Grid container rowSpacing={3} columnSpacing={3} sx={{ padding: 4 }}>
+            <Grid item xs={3} >
+              <Typography variant="body1" align="left" sx={{ height: '100%', display: 'flex', flexDirection: "column", justifyContent: "center" }}>
+                Username
+              </Typography>
+            </Grid>
+            <Grid item xs={9}>
+              <TextField
+                required
+                id="username"
+                type="text"
+                size="small"
+                sx={{ width: '100%' }}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={3} >
+              <Typography variant="body1" align="left" sx={{ height: '100%', display: 'flex', flexDirection: "column", justifyContent: "center" }}>
+                Password
+              </Typography>
+            </Grid>
+            <Grid item xs={9}>
+              <TextField
+                required
+                id="password"
+                type="password"
+                size="small"
+                sx={{ width: '100%' }}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={3} >
+              <Typography variant="body1" align="left" sx={{ height: '100%', display: 'flex', flexDirection: "column", justifyContent: "center" }}>
+                Email
+              </Typography>
+            </Grid>
+            <Grid item xs={9}>
+              <TextField
+                required
+                id="email"
+                type="email"
+                size="small"
+                sx={{ width: '100%' }}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={3} >
+              <Typography variant="body1" align="left" sx={{ height: '100%', display: 'flex', flexDirection: "column", justifyContent: "center" }}>
+                Can add
+              </Typography>
+            </Grid>
+            <Grid item xs={3} align="center">
+              <Switch checked={canAdd} onChange={(e) => setCanAdd(e.target.checked)} />
+            </Grid>
+            <Grid item xs={3} >
+              <Typography variant="body1" align="left" sx={{ height: '100%', display: 'flex', flexDirection: "column", justifyContent: "center" }}>
+                Can view
+              </Typography>
+            </Grid>
+            <Grid item xs={3} align="center">
+              <Switch checked={canView} onChange={(e) => setCanView(e.target.checked)} />
+            </Grid>
+            <Grid item xs={3} >
+              <Typography variant="body1" align="left" sx={{ height: '100%', display: 'flex', flexDirection: "column", justifyContent: "center" }}>
+                View level
+              </Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <Select value={viewLevel} onChange={(e) => setViewLevel(e.target.value)} sx={{ width: '100%' }}>
+                {viewLevelList.map((vl) => {
+                  return <MenuItem key={vl.id} value={vl.id}>{vl.name}</MenuItem>
+                })}
+              </Select>
+            </Grid>
+            <Grid item xs={2} >
+              <Typography variant="body1" align="left" sx={{ height: '100%', display: 'flex', flexDirection: "column", justifyContent: "center" }}>
+                Hub
+              </Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Select value={hubId} onChange={(e) => setHubId(e.target.value)} sx={{ width: '100%' }}>
+                {hubList.map((hub) => {
+                  return <MenuItem key={hub.id} value={hub.id}>{hub.name}</MenuItem>
+                })}
+              </Select>
+            </Grid>
+            <Grid item xs={12}>
+            </Grid>
+            <Grid item xs={4}>
+            </Grid>
+            <Grid item xs={4} >
+              <Button type="submit" variant="contained" sx={{ width: '100%' }}>Add User</Button>
+            </Grid>
+            <Grid item xs={4} >
+            </Grid>
+          </Grid>
+        </form>
+      </Box>
+    </Modal>
   );
 }
+
+export default AddUser;

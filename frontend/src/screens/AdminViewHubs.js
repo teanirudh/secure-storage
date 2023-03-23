@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Divider, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import CustomTable from "../components/CustomTable";
+import AddHub from "../components/AddHub";
 import useAxios from "../utils/useAxios";
 
 const hubTableColumns = [
@@ -36,6 +37,10 @@ const AdminViewHubs = () => {
     getHubs();
   }, []);
 
+  const [openUserModal, setOpenUserModal] = useState(false);
+  const handleOpen = () => { setOpenUserModal(true); };
+  const handleClose = () => { setOpenUserModal(false); };
+
   return (
     <Box margin={10}>
       <Box
@@ -48,10 +53,14 @@ const AdminViewHubs = () => {
         <Typography sx={{ fontSize: 20 }} gutterBottom>
           Hubs
         </Typography>
-        <Button>+ Create Hub</Button>
+        <Button onClick={handleOpen}>+ Add Hub</Button>
       </Box>
       <Divider sx={{ marginBottom: 5 }} />
       <CustomTable columns={hubTableColumns} values={hubList} />
+      <AddHub
+        openUserModal={openUserModal}
+        handleClose={handleClose}
+      />
     </Box>
   );
 };

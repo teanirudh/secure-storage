@@ -48,6 +48,7 @@ class UserView(APIView):
             new_user.view_level = (
                 request.data["view_level"] if "view_level" in request.data else "NONE"
             )
+            new_user.hub = Hub.objects.get(id=request.user.hub_id)
             new_user.is_admin = False
             new_user.save()
         except Exception as e:

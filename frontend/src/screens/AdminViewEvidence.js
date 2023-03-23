@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Divider, Typography } from "@mui/material";
+import { Button, Divider, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import dayjs from "dayjs";
 import CustomTable from "../components/CustomTable";
 import useAxios from "../utils/useAxios";
+import AddEvidence from "../components/AddEvidence";
 
 const evidenceTableColumns = [
   {
@@ -51,15 +52,30 @@ const AdminViewEvidence = () => {
     getEvidence();
   }, []);
 
+  const [openUserModal, setOpenUserModal] = useState(false);
+  const handleOpen = () => { setOpenUserModal(true); };
+  const handleClose = () => { setOpenUserModal(false); };
+
   return (
     <Box margin={10}>
-      <Typography sx={{ fontSize: 20 }} gutterBottom>
-        Evidence
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+
+        <Typography sx={{ fontSize: 20 }} gutterBottom>
+          Evidence
+        </Typography>
+        <Button onClick={handleOpen}>+ Add Evidence</Button>
+      </Box>
       <Divider sx={{ marginBottom: 5 }} />
-      <CustomTable
-        columns={evidenceTableColumns}
-        values={evidenceList}
+      <CustomTable columns={evidenceTableColumns} values={evidenceList} />
+      <AddEvidence
+        openUserModal={openUserModal}
+        handleClose={handleClose}
       />
     </Box>
   );

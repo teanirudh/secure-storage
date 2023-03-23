@@ -3,6 +3,7 @@ import { Button, Divider, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import dayjs from "dayjs";
 import CustomTable from "../components/CustomTable";
+import AddUser from "../components/AddUser";
 import useAxios from "../utils/useAxios";
 
 const userTableColumns = [
@@ -61,6 +62,10 @@ const AdminViewUsers = () => {
     getUsers();
   }, []);
 
+  const [openUserModal, setOpenUserModal] = useState(false);
+  const handleOpen = () => { setOpenUserModal(true); };
+  const handleClose = () => { setOpenUserModal(false); };
+
   return (
     <Box margin={10}>
       <Box
@@ -73,10 +78,14 @@ const AdminViewUsers = () => {
         <Typography sx={{ fontSize: 20 }} gutterBottom>
           Users
         </Typography>
-        <Button>+ Create User</Button>
+        <Button onClick={handleOpen}>+ Add User</Button>
       </Box>
       <Divider sx={{ marginBottom: 5 }} />
       <CustomTable columns={userTableColumns} values={userList} />
+      <AddUser
+        openUserModal={openUserModal}
+        handleClose={handleClose}
+      />
     </Box>
   );
 };
