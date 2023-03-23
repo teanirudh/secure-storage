@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Divider, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import DownloadIcon from '@mui/icons-material/Download';
 import dayjs from "dayjs";
 import CustomTable from "../components/CustomTable";
 import useAxios from "../utils/useAxios";
@@ -31,18 +32,40 @@ const evidenceTableColumns = [
     key: "upload_time",
     name: "Upload Time",
   },
+  {
+    key: "download",
+    name: "",
+  }
 ];
 
 const AdminViewEvidence = () => {
   const axiosInstance = useAxios();
   const [evidenceList, setEvidenceList] = useState([]);
 
+  const downloadEvidence = async (id, file_name) => {
+    await axiosInstance.post('/evidence/download/', { id: id })
+      .then((res) => { downloadFile(res.data, file_name); })
+      .catch((err) => { alert(err.response.data.error); });
+  };
+
+  const downloadFile = (data, file_name) => {
+    const url = window.URL.createObjectURL(new Blob([data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', file_name);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
   const getEvidence = async () => {
     const response = await axiosInstance.get("/evidence/");
     const newList = [];
     response.data.forEach(evidence => {
       const uploadTime = dayjs(evidence.upload_time).format("ddd MMM DD hh:mm:ss");
-      const newEvidence = { ...evidence, "upload_time": uploadTime };
+      const download = <Button size="small" onClick={() => downloadEvidence(evidence.id, evidence.file_name)}><DownloadIcon /></Button>;
+      const newEvidence = { ...evidence, "upload_time": uploadTime, download: download };
       newList.push(newEvidence);
     });
     setEvidenceList(newList);

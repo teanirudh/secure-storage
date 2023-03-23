@@ -159,7 +159,7 @@ class EvidenceView(APIView):
 class EvidenceDownloadView(APIView):
     def post(self, request):
         try:
-            id = request.POST.get("id")
+            id = request.data["id"]
             evidence = Evidence.objects.get(id=id)
             file_name = evidence.file_name
             file_path = evidence.file_path
