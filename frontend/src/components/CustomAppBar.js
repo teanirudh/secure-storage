@@ -35,7 +35,7 @@ const CustomAppBar = () => {
     setState({ ...state, [anchor]: open });
   };
 
-  const sideBarKeys = [
+  const adminSideBarKeys = [
     {
       text: "Dashboard",
       icon: <DashboardIcon />,
@@ -63,6 +63,52 @@ const CustomAppBar = () => {
     },
   ];
 
+  const userSideBarKeys = [
+    {
+      text: "Dashboard",
+      icon: <DashboardIcon />,
+      onClick: () => navigate("/user/dashboard"),
+    },
+    {
+      text: "Evidence",
+      icon: <LocalLibraryIcon />,
+      onClick: () => navigate("/user/view-evidence"),
+    },
+    {
+      text: "Logout",
+      icon: <LogoutIcon />,
+      onClick: logoutUser,
+    },
+  ];
+
+  const displaySideBar = () => {
+    if (!user) return null;
+    if (user.is_admin) {
+      return (
+        adminSideBarKeys.map((key, index) => (
+          <ListItem key={key.text} disablePadding>
+            <ListItemButton onClick={key.onClick}>
+              <ListItemIcon>{key.icon}</ListItemIcon>
+              <ListItemText primary={key.text} />
+            </ListItemButton>
+          </ListItem>
+        ))
+      )
+    }
+    else {
+      return (
+        userSideBarKeys.map((key, index) => (
+          <ListItem key={key.text} disablePadding>
+            <ListItemButton onClick={key.onClick}>
+              <ListItemIcon>{key.icon}</ListItemIcon>
+              <ListItemText primary={key.text} />
+            </ListItemButton>
+          </ListItem>
+        ))
+      )
+    }
+  };
+
   const list = (anchor) => (
     <Box
       sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
@@ -71,14 +117,7 @@ const CustomAppBar = () => {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {sideBarKeys.map((key, index) => (
-          <ListItem key={key.text} disablePadding>
-            <ListItemButton onClick={key.onClick}>
-              <ListItemIcon>{key.icon}</ListItemIcon>
-              <ListItemText primary={key.text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        {displaySideBar()}
       </List>
     </Box>
   );

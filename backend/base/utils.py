@@ -1,6 +1,7 @@
 import base64
 import hashlib
 import os
+import stat
 import string
 import secrets
 from django.conf import settings
@@ -65,6 +66,7 @@ def save_file(data, file_dir, file_name, file_ext=""):
 
     with open(file_path, "wb") as file:
         file.write(data)
+    os.chmod(file_path, stat.S_IREAD | stat.S_IRGRP | stat.S_IROTH)
 
     return file_path
 

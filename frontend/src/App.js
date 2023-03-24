@@ -11,6 +11,7 @@ import AdminViewUsers from "./screens/AdminViewUsers";
 import AdminViewEvidence from "./screens/AdminViewEvidence";
 import AdminViewHubs from "./screens/AdminViewHubs";
 import UserDashboard from "./screens/UserDashboard";
+import UserViewEvidence from "./screens/UserViewEvidence";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
               </Route>
               <Route path="/user">
                 <Route path="/user/dashboard" element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
+                <Route path="/user/view-evidence" element={<PrivateRoute><UserViewEvidence /></PrivateRoute>} />
               </Route>
             </Routes>
           </AuthProvider>
