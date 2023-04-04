@@ -26,7 +26,7 @@ def generate_hash(file):
 
 def generate_key(password=None, salt=None):
     password = (
-        settings.SDJ_PASSWORD.encode("utf-8")
+        settings.SDJ_PWD.encode("utf-8")
         if password is None
         else password.encode("utf-8")
     )
@@ -42,6 +42,18 @@ def generate_key(password=None, salt=None):
     key = base64.urlsafe_b64encode(kdf.derive(password))
 
     return key
+
+
+def generate_file_name(file_dir, file_ext):
+    exists = True
+    while exists:
+        file_name = "".join(
+            secrets.choice(string.ascii_letters + string.digits) for _ in range(64)
+        )
+        path = "{}{}{}".format(file_dir, file_name, file_ext).replace("\\", "/")
+        exists = os.path.isfile(path)
+
+    return file_name
 
 
 def encrypt(data):
@@ -76,10 +88,8 @@ def encrypt_and_save(file):
     encrypted = encrypt(data)
 
     file_dir = settings.SDJ_DIR
-    file_name = "".join(
-        secrets.choice(string.ascii_letters + string.digits) for i in range(64)
-    )
     file_ext = os.path.splitext(file.name)[1]
+    file_name = generate_file_name(file_dir, file_ext)
 
     file_path = save_file(
         data=encrypted, file_dir=file_dir, file_name=file_name, file_ext=file_ext

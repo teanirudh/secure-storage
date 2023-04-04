@@ -164,6 +164,6 @@ CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000",
 ]
 
-SDJ_PASSWORD = "password"
-SDJ_SALT = "salt"
+SDJ_PWD = config("SDJ_PWD")
+SDJ_SALT = config("SDJ_SALT")
 SDJ_DIR = str(BASE_DIR) + "/media/"
