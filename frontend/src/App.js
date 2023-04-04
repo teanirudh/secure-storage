@@ -1,5 +1,5 @@
 import "./styles.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { ThemeProvider } from "@mui/material";
 import { AuthProvider } from "./contexts/AuthContext";
 import PrivateRoute from "./utils/PrivateRoute";
@@ -21,18 +21,13 @@ function App() {
           <AuthProvider>
             <CustomAppBar />
             <Routes>
-              <Route path="/" element={<Login />} exact />
               <Route path="/login" element={<Login />} />
-              <Route path="/admin">
-                <Route path="/admin/dashboard" element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
-                <Route path="/admin/view-users" element={<PrivateRoute><AdminViewUsers /></PrivateRoute>} />
-                <Route path="/admin/view-evidence" element={<PrivateRoute><AdminViewEvidence /></PrivateRoute>} />
-                <Route path="/admin/view-hubs" element={<PrivateRoute><AdminViewHubs /></PrivateRoute>} />
-              </Route>
-              <Route path="/user">
-                <Route path="/user/dashboard" element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
-                <Route path="/user/view-evidence" element={<PrivateRoute><UserViewEvidence /></PrivateRoute>} />
-              </Route>
+              <Route path="/" element={<PrivateRoute adminComponent={<AdminDashboard />} userComponent={<UserDashboard />} />} exact />
+              <Route path="/dashboard" element={<PrivateRoute adminComponent={<AdminDashboard />} userComponent={<UserDashboard />} />} />
+              <Route path="/users" element={<PrivateRoute adminComponent={<AdminViewUsers />} userComponent={<UserDashboard />} />} />
+              <Route path="/hubs" element={<PrivateRoute adminComponent={<AdminViewHubs />} userComponent={<UserDashboard />} />} />
+              <Route path="/evidence" element={<PrivateRoute adminComponent={<AdminViewEvidence />} userComponent={<UserViewEvidence />} />} />
+              <Route path="*" element={<Navigate to="/dashboard" />} />
             </Routes>
           </AuthProvider>
         </Router>

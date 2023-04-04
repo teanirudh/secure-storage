@@ -39,22 +39,22 @@ const CustomAppBar = () => {
     {
       text: "Dashboard",
       icon: <DashboardIcon />,
-      onClick: () => navigate("/admin/dashboard"),
+      onClick: () => navigate("/dashboard"),
     },
     {
       text: "Users",
       icon: <GroupIcon />,
-      onClick: () => navigate("/admin/view-users"),
+      onClick: () => navigate("/users"),
     },
     {
       text: "Evidence",
       icon: <LocalLibraryIcon />,
-      onClick: () => navigate("/admin/view-evidence"),
+      onClick: () => navigate("/evidence"),
     },
     {
       text: "Hubs",
       icon: <PlaceIcon />,
-      onClick: () => navigate("/admin/view-hubs"),
+      onClick: () => navigate("/hubs"),
     },
     {
       text: "Logout",
@@ -67,12 +67,12 @@ const CustomAppBar = () => {
     {
       text: "Dashboard",
       icon: <DashboardIcon />,
-      onClick: () => navigate("/user/dashboard"),
+      onClick: () => navigate("/dashboard"),
     },
     {
       text: "Evidence",
       icon: <LocalLibraryIcon />,
-      onClick: () => navigate("/user/view-evidence"),
+      onClick: () => navigate("/evidence"),
     },
     {
       text: "Logout",
