@@ -44,28 +44,28 @@ def generate_key(password=None, salt=None):
     return key
 
 
-def generate_file_name(file_dir, file_ext):
+def generate_file_name(file_dir):
     exists = True
     while exists:
         file_name = "".join(
             secrets.choice(string.ascii_letters + string.digits) for _ in range(64)
         )
-        path = "{}{}{}".format(file_dir, file_name, file_ext).replace("\\", "/")
+        path = "{}{}".format(file_dir, file_name).replace("\\", "/")
         exists = os.path.isfile(path)
 
     return file_name
 
 
-def encrypt(data):
-    key = generate_key()
+def encrypt(data, password=None, salt=None):
+    key = generate_key(password, salt)
     fernet = Fernet(key)
     encrypted = fernet.encrypt(data)
 
     return encrypted
 
 
-def decrypt(data):
-    key = generate_key()
+def decrypt(data, password=None, salt=None):
+    key = generate_key(password, salt)
     fernet = Fernet(key)
     decrypted = fernet.decrypt(data)
 
@@ -83,23 +83,19 @@ def save_file(data, file_dir, file_name, file_ext=""):
     return file_path
 
 
-def encrypt_and_save(file):
-    data = file.read()
-    encrypted = encrypt(data)
+def encrypt_and_save(data, password=None, salt=None):
+    encrypted = encrypt(data, password, salt)
 
     file_dir = settings.SDJ_DIR
-    file_ext = os.path.splitext(file.name)[1]
-    file_name = generate_file_name(file_dir, file_ext)
+    file_name = generate_file_name(file_dir)
+    file_path = save_file(data=encrypted, file_dir=file_dir, file_name=file_name)
 
-    file_path = save_file(
-        data=encrypted, file_dir=file_dir, file_name=file_name, file_ext=file_ext
-    )
     return file_path
 
 
-def decrypt_and_retrieve(file_path):
+def decrypt_and_retrieve(file_path, password=None, salt=None):
     with open(file_path, "rb") as file:
         data = file.read()
-    decrypted = decrypt(data)
+    decrypted = decrypt(data, password, salt)
 
     return decrypted

@@ -146,8 +146,11 @@ class EvidenceView(APIView):
             file = request.FILES.get("file")
             if evidence.hash != generate_hash(file):
                 raise Exception("Hash does not match")
+
             evidence.file_name = file.name
-            evidence.file_path = encrypt_and_save(file)
+            data = file.read()
+            file_path = encrypt_and_save(data=data)
+            evidence.file_path = file_path
             evidence.save()
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -163,7 +166,7 @@ class EvidenceDownloadView(APIView):
             evidence = Evidence.objects.get(id=id)
             file_name = evidence.file_name
             file_path = evidence.file_path
-            data = decrypt_and_retrieve(file_path)
+            data = decrypt_and_retrieve(file_path=file_path)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         else:
