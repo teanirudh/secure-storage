@@ -22,12 +22,12 @@ const evidenceTableColumns = [
     name: "Description",
   },
   {
-    key: "hub",
-    name: "Hub ID",
+    key: "uploader_id",
+    name: "Uploader ID",
   },
   {
-    key: "uploader",
-    name: "Uploader ID",
+    key: "hub_id",
+    name: "Hub ID",
   },
   {
     key: "upload_time",

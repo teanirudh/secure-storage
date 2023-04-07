@@ -20,7 +20,7 @@ const userTableColumns = [
     name: "Email",
   },
   {
-    key: "hub",
+    key: "hub_id",
     name: "Hub ID",
   },
   {

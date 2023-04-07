@@ -14,7 +14,7 @@ const userTableColumns = [
     name: "User ID",
   },
   {
-    key: "hub",
+    key: "hub_id",
     name: "Hub ID",
   },
   {
@@ -28,12 +28,12 @@ const evidenceTableColumns = [
     name: "Evidence ID",
   },
   {
-    key: "upload_time",
-    name: "Upload Time",
+    key: "uploader_id",
+    name: "Uploader ID",
   },
   {
-    key: "uploader",
-    name: "Uploader ID",
+    key: "upload_time",
+    name: "Upload Time",
   },
 ];
 
@@ -55,12 +55,13 @@ const AdminDashboard = () => {
     response.data.forEach(user => {
       if (dayjs().diff(dayjs(user.last_login), "day") <= 1) {
         const lastLogin = dayjs(user.last_login).format("ddd MMM DD hh:mm:ss");
-        const newUser = { "id": user.id, "hub": user.hub, "last_login": lastLogin };
+        const newUser = { "id": user.id, "hub_id": user.hub_id, "last_login": lastLogin };
         newList.push(newUser);
       }
     });
     setUserList(newList);
     setUserCount(newList.length);
+    console.log(newList);
   };
 
   const getEvidence = async () => {
@@ -70,12 +71,13 @@ const AdminDashboard = () => {
     response.data.forEach(evidence => {
       if (dayjs().diff(dayjs(evidence.upload_time), "day") <= 1) {
         const uploadTime = dayjs(evidence.upload_time).format("ddd MMM DD hh:mm:ss");
-        const newEvidence = { "id": evidence.id, "uploader": evidence.uploader, "upload_time": uploadTime };
+        const newEvidence = { "id": evidence.id, "uploader_id": evidence.uploader_id, "upload_time": uploadTime };
         newList.push(newEvidence);
       }
     });
     setEvidenceList(newList);
     setEvidenceCount(newList.length);
+    console.log(newList);
   };
 
   useEffect(() => {

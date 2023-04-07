@@ -7,6 +7,7 @@ from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import make_password
+from django.db.models import F
 
 from .utils import generate_hash, encrypt_and_save, decrypt_and_retrieve
 from .models import User, Hub, Evidence
@@ -48,9 +49,12 @@ class UserView(APIView):
             new_user.view_level = (
                 request.data["view_level"] if "view_level" in request.data else "NONE"
             )
-            new_user.hub = Hub.objects.get(id=request.user.hub_id)
+            new_user.hub = Hub.objects.get(id=request.data["hub_id"])
             new_user.is_admin = False
             new_user.save()
+            Hub.objects.filter(id=request.data["hub_id"]).update(
+                user_count=F("user_count") + 1
+            )
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -152,6 +156,9 @@ class EvidenceView(APIView):
             file_path = encrypt_and_save(data=data)
             evidence.file_path = file_path
             evidence.save()
+            Hub.objects.filter(id=request.user.hub_id).update(
+                evidence_count=F("evidence_count") + 1
+            )
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         else:

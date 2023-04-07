@@ -15,12 +15,12 @@ const evidenceTableColumns = [
     name: "Evidence ID",
   },
   {
-    key: "upload_time",
-    name: "Upload Time",
+    key: "uploader_id",
+    name: "Uploader ID",
   },
   {
-    key: "uploader",
-    name: "Uploader ID",
+    key: "upload_time",
+    name: "Upload Time",
   },
 ];
 
@@ -39,7 +39,7 @@ const UserDashboard = () => {
     response.data.forEach(evidence => {
       if (dayjs().diff(dayjs(evidence.upload_time), "day") <= 1) {
         const uploadTime = dayjs(evidence.upload_time).format("ddd MMM DD hh:mm:ss");
-        const newEvidence = { "id": evidence.id, "uploader": evidence.uploader, "upload_time": uploadTime };
+        const newEvidence = { "id": evidence.id, "uploader_id": evidence.uploader_id, "upload_time": uploadTime };
         newList.push(newEvidence);
       }
     });

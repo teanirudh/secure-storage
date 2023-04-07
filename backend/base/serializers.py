@@ -17,16 +17,25 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        fields = [
+            "id",
+            "username",
+            "email",
+            "hub_id",
+            "can_add",
+            "can_view",
+            "view_level",
+            "last_login",
+        ]
 
 
 class HubSerializer(ModelSerializer):
     class Meta:
         model = Hub
-        fields = "__all__"
+        fields = ["id", "name", "description", "user_count", "evidence_count"]
 
 
 class EvidenceSerializer(ModelSerializer):
     class Meta:
         model = Evidence
-        fields = "__all__"
+        fields = ["id", "name", "description", "uploader_id", "hub_id", "upload_time"]

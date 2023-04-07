@@ -18,6 +18,14 @@ const hubTableColumns = [
     key: "description",
     name: "Description",
   },
+  {
+    key: "user_count",
+    name: "User Count",
+  },
+  {
+    key: "evidence_count",
+    name: "Evidence Count",
+  },
 ];
 
 const AdminViewHubs = () => {

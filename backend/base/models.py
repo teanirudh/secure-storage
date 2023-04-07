@@ -12,13 +12,14 @@ class Hub(models.Model):
     id = models.CharField(primary_key=True, max_length=10, default=gen_hub_pk)
     name = models.CharField(max_length=64, unique=True)
     description = models.CharField(max_length=256)
+    user_count = models.IntegerField(default=0)
+    evidence_count = models.IntegerField(default=0)
 
     class Meta:
         db_table = "hub"
 
 
 class UserManager(BaseUserManager):
-
     use_in_migration = True
 
     def create_user(self, username, password, **extra_fields):
