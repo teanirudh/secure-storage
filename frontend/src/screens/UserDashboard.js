@@ -13,14 +13,17 @@ const evidenceTableColumns = [
   {
     key: "id",
     name: "Evidence ID",
+    width: "30%",
   },
   {
     key: "uploader_id",
     name: "Uploader ID",
+    width: "30%",
   },
   {
     key: "upload_time",
     name: "Upload Time",
+    width: "40%",
   },
 ];
 

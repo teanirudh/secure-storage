@@ -9,22 +9,27 @@ const hubTableColumns = [
   {
     key: "id",
     name: "Hub ID",
+    width: "20%",
   },
   {
     key: "name",
     name: "Name",
+    width: "20%",
   },
   {
     key: "description",
     name: "Description",
+    width: "30%",
   },
   {
     key: "user_count",
     name: "User Count",
+    width: "15%",
   },
   {
     key: "evidence_count",
     name: "Evidence Count",
+    width: "15%",
   },
 ];
 

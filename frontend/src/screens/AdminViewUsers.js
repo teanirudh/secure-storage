@@ -10,34 +10,42 @@ const userTableColumns = [
   {
     key: "id",
     name: "User ID",
+    width: "10%",
   },
   {
     key: "username",
     name: "Username",
+    width: "10%",
   },
   {
     key: "email",
     name: "Email",
+    width: "20%",
   },
   {
     key: "hub_id",
     name: "Hub ID",
+    width: "10%",
   },
   {
     key: "can_add",
     name: "Can Add",
+    width: "10%",
   },
   {
     key: "can_view",
     name: "Can View",
+    width: "10%",
   },
   {
     key: "view_level",
     name: "View Level",
+    width: "10%",
   },
   {
     key: "last_login",
     name: "Last login",
+    width: "20%",
   },
 ];
 

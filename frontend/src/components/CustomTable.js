@@ -12,29 +12,26 @@ import Paper from "@mui/material/Paper";
 export default function CustomTable({ columns, values, emptyMessage }) {
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table>
         <TableHead>
           <TableRow>
             {columns.map((c, i) => (
-              <TableCell key={i}>{c.name}</TableCell>
+              <TableCell align="center" style={{ width: c.width }} key={i}>{c.name}</TableCell>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
           {values.map((row) => (
-            <TableRow
-              key={row.id}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
+            <TableRow key={row.id}>
               {columns.map((c, i) => {
-                return <TableCell key={i}>{row[c.key]}</TableCell>;
+                return <TableCell align="center" key={i}>{row[c.key]}</TableCell>;
               })}
             </TableRow>
           ))}
         </TableBody>
       </Table>
       {values.length === 0 && (
-        <Typography variant="h8" align="center" style={{ fontStyle: 'italic', alignItems: 'center', margin: '10px' }}>
+        <Typography variant="h8" align="center" style={{ fontStyle: 'italic', alignItems: 'center', margin: '10px', justifyContent: "center" }}>
           {emptyMessage}
         </Typography>
       )}

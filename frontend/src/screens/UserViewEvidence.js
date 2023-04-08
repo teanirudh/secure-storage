@@ -12,30 +12,37 @@ const evidenceTableColumns = [
   {
     key: "id",
     name: "Evidence ID",
+    width: "15%",
   },
   {
     key: "name",
     name: "Name",
+    width: "10%",
   },
   {
     key: "description",
     name: "Description",
+    width: "25%",
   },
   {
     key: "uploader_id",
     name: "Uploader ID",
+    width: "15%",
   },
   {
     key: "hub_id",
     name: "Hub ID",
+    width: "15%",
   },
   {
     key: "upload_time",
     name: "Upload Time",
+    width: "15%",
   },
   {
     key: "download",
     name: "",
+    width: "5%",
   }
 ];
 
@@ -66,7 +73,7 @@ const UserViewEvidence = () => {
     const newList = [];
     response.data.forEach(evidence => {
       const uploadTime = dayjs(evidence.upload_time).format("ddd MMM DD hh:mm:ss");
-      const download = <Button size="small" onClick={() => downloadEvidence(evidence.id, evidence.file_name)}><DownloadIcon /></Button>;
+      const download = <Button sx={{ height: 5 }} onClick={() => downloadEvidence(evidence.id, evidence.file_name)}><DownloadIcon /></Button>;
       const newEvidence = { ...evidence, "upload_time": uploadTime, download: download };
       newList.push(newEvidence);
     });

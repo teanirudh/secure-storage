@@ -12,28 +12,34 @@ const userTableColumns = [
   {
     key: "id",
     name: "User ID",
+    width: "30%",
   },
   {
     key: "hub_id",
     name: "Hub ID",
+    width: "30%",
   },
   {
     key: "last_login",
     name: "Last Login",
+    width: "40%",
   },
 ];
 const evidenceTableColumns = [
   {
     key: "id",
     name: "Evidence ID",
+    width: "30%",
   },
   {
     key: "uploader_id",
     name: "Uploader ID",
+    width: "30%",
   },
   {
     key: "upload_time",
     name: "Upload Time",
+    width: "40%",
   },
 ];
 
@@ -61,7 +67,6 @@ const AdminDashboard = () => {
     });
     setUserList(newList);
     setUserCount(newList.length);
-    console.log(newList);
   };
 
   const getEvidence = async () => {
@@ -77,7 +82,6 @@ const AdminDashboard = () => {
     });
     setEvidenceList(newList);
     setEvidenceCount(newList.length);
-    console.log(newList);
   };
 
   useEffect(() => {
