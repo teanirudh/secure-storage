@@ -38,4 +38,12 @@ class HubSerializer(ModelSerializer):
 class EvidenceSerializer(ModelSerializer):
     class Meta:
         model = Evidence
-        fields = ["id", "name", "description", "uploader_id", "hub_id", "upload_time"]
+        fields = [
+            "id",
+            "name",
+            "description",
+            "uploader_id",
+            "hub_id",
+            "upload_time",
+            "file_name",
+        ]

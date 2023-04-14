@@ -34,6 +34,18 @@ const useAxios = () => {
     return request;
   });
 
+  axiosInstance.interceptors.response.use(
+    async (response) => {
+      return response;
+    },
+    async (error) => {
+      if (error.response && error.response.status === 503) {
+        logoutUser();
+        window.alert("System under maintenance. Please try again later.");
+      }
+      return error;
+    });
+
   return axiosInstance;
 };
 

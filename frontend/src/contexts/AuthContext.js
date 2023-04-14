@@ -13,36 +13,40 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  let loginUser = async (e) => {
+  let loginUser = (e) => {
     e.preventDefault();
     const url = "http://localhost:8000/token/";
     const headers = { "Content-Type": "application/json" };
     const body = JSON.stringify({ username: e.target.username.value, password: e.target.password.value });
-    const response = await axios.post(url, body, { headers })
-      .then((res) => {
-        return res;
+
+    axios.post(url, body, { headers })
+      .then((response) => {
+        const data = response.data;
+        if (response.status === 200) {
+          setAuthTokens(data);
+          setUser(jwt_decode(data.access));
+          localStorage.setItem("authTokens", JSON.stringify(data));
+          const isAdmin = jwt_decode(data.access).is_admin;
+
+          if (isAdmin) {
+            navigate("/admin/dashboard");
+          }
+          else {
+            navigate("/user/dashboard");
+          }
+        }
       })
-      .catch((res) => {
-        return res;
+      .catch((error) => {
+        if (error.response && error.response.status === 503) {
+          window.alert("System under maintenance. Please try again later.");
+        }
+        else if (error.response && error.response.status === 401) {
+          window.alert("Invalid username or password.");
+        }
+        else {
+          window.alert("Something went wrong. Please try again later.");
+        }
       });
-    const data = response.data;
-
-    if (response.status === 200) {
-      setAuthTokens(data);
-      setUser(jwt_decode(data.access));
-      localStorage.setItem("authTokens", JSON.stringify(data));
-
-      const isAdmin = jwt_decode(data.access).is_admin;
-      if (isAdmin) {
-        navigate("/admin/dashboard");
-      }
-      else {
-        navigate("/user/dashboard");
-      }
-    }
-    else {
-      alert("Invalid username or password");
-    }
   };
 
   let logoutUser = () => {
