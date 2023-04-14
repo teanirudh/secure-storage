@@ -27,11 +27,14 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.sessions",
     "django.contrib.staticfiles",
+    "django_crontab",
     "corsheaders",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
     "base",
 ]
+
+CRONJOBS = [("* * * * *", "base.tasks.run_tasks")]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
