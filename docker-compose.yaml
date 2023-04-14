@@ -12,8 +12,6 @@ services:
       - ./backend:/app/backend
     ports:
       - "8000:8000"
-    env_file:
-      - ./backend/.env
     command: sh -c "python manage.py runserver 0.0.0.0:8000"
 
   engine:
@@ -24,8 +22,6 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./backend:/app/backend
-    env_file:
-      - ./backend/.env
     command: cron -f
 
   frontend:
