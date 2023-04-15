@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { Button, Divider, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import CustomTable from "../components/CustomTable";
 import AddHub from "../components/AddHub";
-import useAxios from "../utils/useAxios";
+import DataContext from "../contexts/DataContext";
 
 const hubTableColumns = [
   {
@@ -34,21 +34,7 @@ const hubTableColumns = [
 ];
 
 const AdminViewHubs = () => {
-  const axiosInstance = useAxios();
-  const [hubList, setHubList] = useState([]);
-
-  const getHubs = async () => {
-    const response = await axiosInstance.get("/hub/");
-    const newList = [];
-    response.data.forEach(hub => {
-      newList.push(hub);
-    });
-    setHubList(newList);
-  };
-
-  useEffect(() => {
-    getHubs();
-  }, []);
+  const { hubList } = useContext(DataContext);
 
   const [openUserModal, setOpenUserModal] = useState(false);
   const handleOpen = () => { setOpenUserModal(true); };

@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import dayjs from "dayjs";
 import CustomTable from "../components/CustomTable";
-import useAxios from "../utils/useAxios";
 import AuthContext from "../contexts/AuthContext";
+import DataContext from "../contexts/DataContext";
 
 const evidenceTableColumns = [
   {
@@ -29,30 +28,7 @@ const evidenceTableColumns = [
 
 const UserDashboard = () => {
   const { user } = useContext(AuthContext);
-  const axiosInstance = useAxios();
-
-  const [evidenceList, setEvidenceList] = useState([]);
-  const [evidenceCount, setEvidenceCount] = useState(0);
-  const [totalEvidenceCount, setTotalEvidenceCount] = useState(0);
-
-  const getEvidence = async () => {
-    const response = await axiosInstance.get("/evidence/");
-    setTotalEvidenceCount(response.data.length);
-    const newList = [];
-    response.data.forEach(evidence => {
-      if (dayjs().diff(dayjs(evidence.upload_time), "day") <= 1) {
-        const uploadTime = dayjs(evidence.upload_time).format("ddd MMM DD hh:mm:ss");
-        const newEvidence = { "id": evidence.id, "uploader_id": evidence.uploader_id, "upload_time": uploadTime };
-        newList.push(newEvidence);
-      }
-    });
-    setEvidenceList(newList);
-    setEvidenceCount(newList.length);
-  };
-
-  useEffect(() => {
-    getEvidence();
-  }, []);
+  const { evidenceCount, recentEvidenceList, recentEvidenceCount } = useContext(DataContext);
 
   return (
     <Box sx={{ flexGrow: 1, margin: 10 }}>
@@ -79,10 +55,10 @@ const UserDashboard = () => {
                 Evidence
               </Typography>
               <Typography sx={{ fontSize: 30 }} gutterBottom>
-                {totalEvidenceCount}
+                {evidenceCount}
               </Typography>
               <Typography sx={{ fontSize: 12 }} color="green" gutterBottom>
-                {evidenceCount} added in the last day
+                {recentEvidenceCount} added in the last day
               </Typography>
             </CardContent>
           </Card>
@@ -94,7 +70,7 @@ const UserDashboard = () => {
         <Grid item xs={6}>
           <CustomTable
             columns={evidenceTableColumns}
-            values={evidenceList}
+            values={recentEvidenceList}
             emptyMessage={user.view_level !== "NONE" ? "No recent upload activity" : "You are not authorized to view evidence"}
           />
         </Grid>

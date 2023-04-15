@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Button, Divider, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import DownloadIcon from '@mui/icons-material/Download';
-import dayjs from "dayjs";
 import CustomTable from "../components/CustomTable";
 import useAxios from "../utils/useAxios";
 import AddEvidence from "../components/AddEvidence";
 import AuthContext from "../contexts/AuthContext";
+import DataContext from "../contexts/DataContext";
 
 const evidenceTableColumns = [
   {
@@ -47,9 +47,9 @@ const evidenceTableColumns = [
 ];
 
 const UserViewEvidence = () => {
-  const { user } = useContext(AuthContext);
   const axiosInstance = useAxios();
-  const [evidenceList, setEvidenceList] = useState([]);
+  const { user } = useContext(AuthContext);
+  const { evidenceList } = useContext(DataContext);
 
   const downloadEvidence = async (id, file_name) => {
     await axiosInstance.post('/evidence/download/', { id: id })
@@ -68,21 +68,9 @@ const UserViewEvidence = () => {
     URL.revokeObjectURL(url);
   }
 
-  const getEvidence = async () => {
-    const response = await axiosInstance.get("/evidence/");
-    const newList = [];
-    response.data.forEach(evidence => {
-      const uploadTime = dayjs(evidence.upload_time).format("ddd MMM DD hh:mm:ss");
-      const download = <Button sx={{ height: 5 }} onClick={() => downloadEvidence(evidence.id, evidence.file_name)}><DownloadIcon /></Button>;
-      const newEvidence = { ...evidence, "upload_time": uploadTime, download: download };
-      newList.push(newEvidence);
-    });
-    setEvidenceList(newList);
-  };
-
-  useEffect(() => {
-    getEvidence();
-  }, []);
+  evidenceList.forEach((evidence) => {
+    evidence.download = <Button sx={{ height: 5 }} onClick={() => downloadEvidence(evidence.id, evidence.file_name)}><DownloadIcon /></Button>;
+  });
 
   const [openUserModal, setOpenUserModal] = useState(false);
   const handleOpen = () => { setOpenUserModal(true); };

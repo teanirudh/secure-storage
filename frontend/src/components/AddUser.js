@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
@@ -9,8 +9,10 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import useAxios from '../utils/useAxios';
+import DataContext from "../contexts/DataContext";
 
 const AddUser = (props) => {
+  const { hubList } = useContext(DataContext);
   const axiosInstance = useAxios();
   const { openUserModal, handleClose } = props;
 
@@ -21,17 +23,8 @@ const AddUser = (props) => {
   const [canView, setCanView] = useState(false);
   const [viewLevel, setViewLevel] = useState("");
   const [hubId, setHubId] = useState("");
-  const [hubList, setHubList] = useState([]);
+
   const viewLevelList = [{ id: "NONE", name: "None" }, { id: "SELF", name: "Self" }, { id: "HUB", name: "Hub" }, { id: "GBL", name: "Global" }];
-
-  const getHubs = async () => {
-    const response = await axiosInstance.get("/hub/");
-    setHubList(response.data);
-  };
-
-  useEffect(() => {
-    getHubs();
-  }, []);
 
   const clearForm = () => {
     setUsername("");

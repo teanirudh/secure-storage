@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { ThemeProvider } from "@mui/material";
 import { AuthProvider } from "./contexts/AuthContext";
+import { DataProvider } from "./contexts/DataContext";
 import PrivateRoute from "./utils/PrivateRoute";
 import { theme } from "./utils/ThemeProvider";
 import CustomAppBar from "./components/CustomAppBar";
@@ -18,16 +19,18 @@ function App() {
       <ThemeProvider theme={theme}>
         <Router>
           <AuthProvider>
-            <CustomAppBar />
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/" element={<PrivateRoute adminComponent={<AdminDashboard />} userComponent={<UserDashboard />} />} exact />
-              <Route path="/dashboard" element={<PrivateRoute adminComponent={<AdminDashboard />} userComponent={<UserDashboard />} />} />
-              <Route path="/users" element={<PrivateRoute adminComponent={<AdminViewUsers />} userComponent={<UserDashboard />} />} />
-              <Route path="/hubs" element={<PrivateRoute adminComponent={<AdminViewHubs />} userComponent={<UserDashboard />} />} />
-              <Route path="/evidence" element={<PrivateRoute adminComponent={<AdminViewEvidence />} userComponent={<UserViewEvidence />} />} />
-              <Route path="*" element={<Navigate to="/dashboard" />} />
-            </Routes>
+            <DataProvider>
+              <CustomAppBar />
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<PrivateRoute adminComponent={<AdminDashboard />} userComponent={<UserDashboard />} />} exact />
+                <Route path="/dashboard" element={<PrivateRoute adminComponent={<AdminDashboard />} userComponent={<UserDashboard />} />} />
+                <Route path="/users" element={<PrivateRoute adminComponent={<AdminViewUsers />} userComponent={<UserDashboard />} />} />
+                <Route path="/hubs" element={<PrivateRoute adminComponent={<AdminViewHubs />} userComponent={<UserDashboard />} />} />
+                <Route path="/evidence" element={<PrivateRoute adminComponent={<AdminViewEvidence />} userComponent={<UserViewEvidence />} />} />
+                <Route path="*" element={<Navigate to="/dashboard" />} />
+              </Routes>
+            </DataProvider>
           </AuthProvider>
         </Router>
       </ThemeProvider>
