@@ -25,8 +25,8 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/" element={<PrivateRoute adminComponent={<AdminDashboard />} userComponent={<UserDashboard />} />} exact />
                 <Route path="/dashboard" element={<PrivateRoute adminComponent={<AdminDashboard />} userComponent={<UserDashboard />} />} />
-                <Route path="/users" element={<PrivateRoute adminComponent={<AdminViewUsers />} userComponent={<UserDashboard />} />} />
                 <Route path="/hubs" element={<PrivateRoute adminComponent={<AdminViewHubs />} userComponent={<UserDashboard />} />} />
+                <Route path="/users" element={<PrivateRoute adminComponent={<AdminViewUsers />} userComponent={<UserDashboard />} />} />
                 <Route path="/evidence" element={<PrivateRoute adminComponent={<AdminViewEvidence />} userComponent={<UserViewEvidence />} />} />
                 <Route path="*" element={<Navigate to="/dashboard" />} />
               </Routes>

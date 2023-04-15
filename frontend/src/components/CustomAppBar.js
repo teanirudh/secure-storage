@@ -42,6 +42,11 @@ const CustomAppBar = () => {
       onClick: () => navigate("/dashboard"),
     },
     {
+      text: "Hubs",
+      icon: <PlaceIcon />,
+      onClick: () => navigate("/hubs"),
+    },
+    {
       text: "Users",
       icon: <GroupIcon />,
       onClick: () => navigate("/users"),
@@ -50,11 +55,6 @@ const CustomAppBar = () => {
       text: "Evidence",
       icon: <LocalLibraryIcon />,
       onClick: () => navigate("/evidence"),
-    },
-    {
-      text: "Hubs",
-      icon: <PlaceIcon />,
-      onClick: () => navigate("/hubs"),
     },
     {
       text: "Logout",

@@ -51,7 +51,7 @@ const AdminViewEvidence = () => {
 
   const downloadEvidence = async (id, file_name) => {
     await axiosInstance.post('/evidence/download/', { id: id })
-      .then((res) => { downloadFile(res.data, file_name); })
+      .then((res) => { if (res.status === 200) downloadFile(res.data, file_name); })
       .catch((err) => { alert(err.response.data.error); });
   };
 
