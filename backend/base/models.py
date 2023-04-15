@@ -100,3 +100,15 @@ class Evidence(models.Model):
     class Meta:
         db_table = "evidence"
         verbose_name_plural = "evidence"
+
+
+class MaintenanceLog(models.Model):
+    id = models.AutoField(primary_key=True)
+    is_active = models.BooleanField(default=True)
+    start_time = models.DateTimeField(auto_now_add=True)
+    end_time = models.DateTimeField(null=True)
+    old_pwd = models.CharField(max_length=16, null=True)
+    old_salt = models.CharField(max_length=8, null=True)
+
+    class Meta:
+        db_table = "maintenance_log"

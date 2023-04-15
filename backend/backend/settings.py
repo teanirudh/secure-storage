@@ -1,10 +1,10 @@
 from pathlib import Path
 from datetime import timedelta
-from decouple import Config, RepositoryEnv
+from decouple import AutoConfig
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-config = Config(RepositoryEnv(BASE_DIR / "backend" / ".env"))
+config = AutoConfig(BASE_DIR / "backend" / ".env")
 
 SECRET_KEY = config("SECRET_KEY")
 
@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     "base",
 ]
 
-CRONJOBS = [("* * * * *", "base.tasks.run_tasks")]
+CRONJOBS = [("0 3 * * 0", "base.tasks.run_tasks")]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (

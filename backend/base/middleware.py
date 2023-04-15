@@ -1,6 +1,6 @@
-import os
 from django.http import HttpResponse
 from rest_framework import status
+from .models import MaintenanceLog
 
 
 class RequestMiddleware:
@@ -8,7 +8,8 @@ class RequestMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if os.getenv("MAINTENANCE_MODE") == "on":
+        under_maintenance = MaintenanceLog.objects.filter(is_active=True).exists()
+        if under_maintenance:
             response = HttpResponse(
                 {
                     "data": {

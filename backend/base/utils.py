@@ -4,14 +4,14 @@ import os
 import stat
 import string
 import secrets
-from decouple import Config, RepositoryEnv
+from decouple import AutoConfig
 from django.conf import settings
 from cryptography.fernet import Fernet
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
-config = Config(RepositoryEnv(settings.BASE_DIR / "base" / ".env"))
+config = AutoConfig(settings.BASE_DIR / "base" / ".env")
 
 
 def generate_hash(file):
@@ -89,7 +89,7 @@ def save_file(data, file_dir, file_name, file_ext=""):
 def encrypt_and_save(data, password=None, salt=None):
     encrypted = encrypt(data, password, salt)
 
-    file_dir = str(settings.BASE_DIR) + config("SDJ_DIR")
+    file_dir = str(settings.BASE_DIR) + str(config("SDJ_DIR"))
     file_name = generate_file_name(file_dir)
     file_path = save_file(data=encrypted, file_dir=file_dir, file_name=file_name)
 
