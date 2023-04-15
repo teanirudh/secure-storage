@@ -14,6 +14,12 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 
+class HubSerializer(ModelSerializer):
+    class Meta:
+        model = Hub
+        fields = ["id", "name", "description", "user_count", "evidence_count"]
+
+
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
@@ -27,12 +33,6 @@ class UserSerializer(ModelSerializer):
             "view_level",
             "last_login",
         ]
-
-
-class HubSerializer(ModelSerializer):
-    class Meta:
-        model = Hub
-        fields = ["id", "name", "description", "user_count", "evidence_count"]
 
 
 class EvidenceSerializer(ModelSerializer):

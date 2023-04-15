@@ -1,4 +1,5 @@
 import magic
+import logging
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.views import APIView
@@ -12,15 +13,66 @@ from django.db.models import F
 from .utils import generate_hash, encrypt_and_save, decrypt_and_retrieve
 from .models import User, Hub, Evidence
 from .serializers import (
-    UserSerializer,
     HubSerializer,
+    UserSerializer,
     EvidenceSerializer,
     MyTokenObtainPairSerializer,
 )
 
+logger = logging.getLogger(__name__)
+
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+@permission_classes([IsAuthenticated])
+class HubView(APIView):
+    def get(self, request):
+        try:
+            if not request.user.is_admin:
+                return Response(
+                    {"error": "Unauthorized"}, status=status.HTTP_400_BAD_REQUEST
+                )
+            hubs = Hub.objects.all()
+            serializer = HubSerializer(hubs, many=True)
+        except Exception as e:
+            logger.error(f"ERROR: {e}")
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            logger.info(f"SUCCESS: Hub list sent")
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        try:
+            logger.info(f"BEGIN: Add hub")
+            hub = Hub()
+            hub.name = request.data["name"]
+            hub.description = request.data["description"]
+            hub.save()
+            logger.info(f"END: Add hub")
+        except Exception as e:
+            logger.error(f"ERROR: {e}")
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            logger.info(f"SUCCESS: Hub added")
+            return Response({"success": "Hub added"}, status=status.HTTP_200_OK)
+
+    def patch(self, request):
+        try:
+            logger.info(f"BEGIN: Update hub")
+            hub = Hub.objects.get(name=request.data["name"])
+            fields = request.data["fields"] if "fields" in request.data else []
+            for field in fields:
+                hub.__setattr__(field, request.data[field])
+            hub.save()
+            logger.info(f"END: Update hub")
+        except Exception as e:
+            logger.error(f"ERROR: {e}")
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            logger.info(f"SUCCESS: Hub updated")
+            return Response({"success": "Hub updated"}, status=status.HTTP_200_OK)
 
 
 @permission_classes([IsAuthenticated])
@@ -30,12 +82,15 @@ class UserView(APIView):
             users = User.objects.all().filter(is_admin=False)
             serializer = UserSerializer(users, many=True)
         except Exception as e:
+            logger.error(f"ERROR: {e}")
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         else:
+            logger.info(f"SUCCESS: User list sent")
             return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         try:
+            logger.info(f"BEGIN: Add user")
             new_user = User()
             new_user.username = request.data["username"]
             new_user.password = make_password(request.data["password"])
@@ -55,13 +110,17 @@ class UserView(APIView):
             Hub.objects.filter(id=request.data["hub_id"]).update(
                 user_count=F("user_count") + 1
             )
+            logger.info(f"END: Add user")
         except Exception as e:
+            logger.error(f"ERROR: {e}")
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         else:
+            logger.info(f"SUCCESS: User added")
             return Response({"success": "User added"}, status=status.HTTP_200_OK)
 
     def patch(self, request):
         try:
+            logger.info(f"BEGIN: Update user")
             user = User.objects.get(username=request.data["username"])
             fields = request.data["fields"] if "fields" in request.data else []
             for field in fields:
@@ -70,49 +129,13 @@ class UserView(APIView):
                 else:
                     user.__setattr__(field, request.data[field])
             user.save()
+            logger.info(f"END: Update user")
         except Exception as e:
+            logger.error(f"ERROR: {e}")
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({"success": "User changed"}, status=status.HTTP_200_OK)
-
-
-@permission_classes([IsAuthenticated])
-class HubView(APIView):
-    def get(self, request):
-        try:
-            if not request.user.is_admin:
-                return Response(
-                    {"error": "Unauthorized"}, status=status.HTTP_400_BAD_REQUEST
-                )
-            hubs = Hub.objects.all()
-            serializer = HubSerializer(hubs, many=True)
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def post(self, request):
-        try:
-            hub = Hub()
-            hub.name = request.data["name"]
-            hub.description = request.data["description"]
-            hub.save()
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({"success": "Hub added"}, status=status.HTTP_200_OK)
-
-    def patch(self, request):
-        try:
-            hub = Hub.objects.get(name=request.data["name"])
-            fields = request.data["fields"] if "fields" in request.data else []
-            for field in fields:
-                hub.__setattr__(field, request.data[field])
-            hub.save()
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({"success": "Hub changed"}, status=status.HTTP_200_OK)
+            logger.info(f"SUCCESS: User updated")
+            return Response({"success": "User updated"}, status=status.HTTP_200_OK)
 
 
 @permission_classes([IsAuthenticated])
@@ -133,12 +156,15 @@ class EvidenceView(APIView):
                 evidence = Evidence.objects.filter(user=request.user)
             serializer = EvidenceSerializer(evidence, many=True)
         except Exception as e:
+            logger.error(f"ERROR: {e}")
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         else:
+            logger.info(f"SUCCESS: Evidence list sent")
             return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         try:
+            logger.info(f"BEGIN: Add evidence")
             evidence = Evidence()
             evidence.name = request.POST.get("name")
             evidence.description = request.POST.get("description")
@@ -159,9 +185,12 @@ class EvidenceView(APIView):
             Hub.objects.filter(id=request.user.hub_id).update(
                 evidence_count=F("evidence_count") + 1
             )
+            logger.info(f"END: Add evidence")
         except Exception as e:
+            logger.error(f"ERROR: {e}")
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         else:
+            logger.info(f"SUCCESS: Evidence added")
             return Response({"success": "Evidence added"}, status=status.HTTP_200_OK)
 
 
@@ -169,14 +198,18 @@ class EvidenceView(APIView):
 class EvidenceDownloadView(APIView):
     def post(self, request):
         try:
+            logger.info(f"BEGIN: Evidence download")
             id = request.data["id"]
             evidence = Evidence.objects.get(id=id)
             file_name = evidence.file_name
             file_path = evidence.file_path
             data = decrypt_and_retrieve(file_path=file_path)
+            logger.info(f"END: Evidence download")
         except Exception as e:
+            logger.error(f"ERROR: {e}")
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         else:
+            logger.info(f"SUCCESS: Evidence downloaded")
             return Response(
                 data,
                 content_type=magic.Magic(mime=True).from_buffer(data),

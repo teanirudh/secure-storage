@@ -7,8 +7,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("token/", views.MyTokenObtainPairView.as_view(), name="token_obtain"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path("user/", views.UserView.as_view(), name="user"),
     path("hub/", views.HubView.as_view(), name="hub"),
+    path("user/", views.UserView.as_view(), name="user"),
     path("evidence/", views.EvidenceView.as_view(), name="evidence"),
     path(
         "evidence/download/",
