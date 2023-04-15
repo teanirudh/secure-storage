@@ -47,7 +47,7 @@ const AddUser = (props) => {
       view_level: viewLevel,
       hub_id: hubId,
     }
-    await axiosInstance.post("/user/", body)
+    await axiosInstance.post("/users/", body)
       .then((res) => {
         alert(res.data.success);
         clearForm();

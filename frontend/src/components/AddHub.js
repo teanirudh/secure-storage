@@ -25,7 +25,7 @@ const AddHub = (props) => {
       name: name,
       description: description,
     }
-    await axiosInstance.post("/hub/", body)
+    await axiosInstance.post("/hubs/", body)
       .then((res) => {
         alert(res.data.success);
         clearForm();

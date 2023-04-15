@@ -8,8 +8,8 @@ const AuthContext = createContext();
 export default AuthContext;
 
 export const AuthProvider = ({ children }) => {
-  const [authTokens, setAuthTokens] = useState(() => localStorage.getItem("authTokens") ? JSON.parse(localStorage.getItem("authTokens")) : null);
-  const [user, setUser] = useState(() => localStorage.getItem("authTokens") ? jwt_decode(localStorage.getItem("authTokens")) : null);
+  const [authTokens, setAuthTokens] = useState(() => sessionStorage.getItem("authTokens") ? JSON.parse(sessionStorage.getItem("authTokens")) : null);
+  const [user, setUser] = useState(() => sessionStorage.getItem("authTokens") ? jwt_decode(sessionStorage.getItem("authTokens")) : null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -25,15 +25,8 @@ export const AuthProvider = ({ children }) => {
         if (response.status === 200) {
           setAuthTokens(data);
           setUser(jwt_decode(data.access));
-          localStorage.setItem("authTokens", JSON.stringify(data));
-          const isAdmin = jwt_decode(data.access).is_admin;
-
-          if (isAdmin) {
-            navigate("/admin/dashboard");
-          }
-          else {
-            navigate("/user/dashboard");
-          }
+          sessionStorage.setItem("authTokens", JSON.stringify(data));
+          navigate("/dashboard");
         }
       })
       .catch((error) => {
@@ -52,7 +45,7 @@ export const AuthProvider = ({ children }) => {
   let logoutUser = () => {
     setAuthTokens(null);
     setUser(null);
-    localStorage.removeItem("authTokens");
+    sessionStorage.removeItem("authTokens");
     navigate("/login");
   };
 

@@ -10,6 +10,7 @@ export default DataContext;
 export const DataProvider = ({ children }) => {
   const axiosInstance = useAxios();
   const { user } = useContext(AuthContext);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const [hubList, setHubList] = useState([]);
   const [hubCount, setHubCount] = useState(0);
@@ -74,10 +75,10 @@ export const DataProvider = ({ children }) => {
   };
 
   const handleAdminLogin = () => {
-    axiosInstance.get("/hub/")
+    axiosInstance.get("/hubs/")
       .then((response) => {
         handleGetHubs(response);
-        return axiosInstance.get("/user/")
+        return axiosInstance.get("/users/")
       })
       .then((response) => {
         handleGetUsers(response);
@@ -101,6 +102,15 @@ export const DataProvider = ({ children }) => {
       });
   };
 
+  const handleLogin = () => {
+    if (!user) return;
+    if (user.is_admin) {
+      handleAdminLogin();
+    } else {
+      handleUserLogin();
+    }
+  };
+
   let contextData = {
     hubList,
     hubCount,
@@ -118,14 +128,14 @@ export const DataProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (user) {
-      if (user.is_admin) {
-        handleAdminLogin();
-      } else {
-        handleUserLogin();
-      }
+    if (loggedIn) {
+      handleLogin();
+      setLoggedIn(false);
     }
-  }, []);
+    else {
+      setLoggedIn(true);
+    }
+  }, [user]);
 
   return (
     <DataContext.Provider value={contextData}>
