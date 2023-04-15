@@ -81,7 +81,7 @@ const Login = () => {
                   autoComplete="current-password"
                 />
               </Box>
-              <Button type="submit" variant="contained" sx={{ backgroundColor: "#247E38" }}>
+              <Button type="submit" variant="contained" sx={{ backgroundColor: "#247E38", '&:hover': { backgroundColor: "#1D662D" } }}>
                 Login
               </Button>
             </Box>

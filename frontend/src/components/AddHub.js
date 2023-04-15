@@ -83,7 +83,12 @@ const AddHub = (props) => {
             <Grid item xs={4}>
             </Grid>
             <Grid item xs={4} >
-              <Button type="submit" variant="contained" sx={{ width: '100%' }}>Add Hub</Button>
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{ width: '100%', backgroundColor: "#247E38", '&:hover': { backgroundColor: "#1D662D" } }}>
+                Add Hub
+              </Button>
             </Grid>
             <Grid item xs={4} >
             </Grid>
