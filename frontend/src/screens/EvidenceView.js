@@ -67,7 +67,13 @@ const EvidenceView = () => {
   }
 
   evidenceList.forEach((evidence) => {
-    evidence.download = <Button sx={{ height: 5 }} onClick={() => downloadEvidence(evidence.id, evidence.file_name)}><DownloadIcon /></Button>;
+    evidence.download =
+      <Button
+        sx={{ height: 5, "&:hover": { backgroundColor: "transparent" } }}
+        onClick={() => downloadEvidence(evidence.id, evidence.file_name)}
+      >
+        <DownloadIcon />
+      </Button>;
   });
 
   const [openUserModal, setOpenUserModal] = useState(false);

@@ -73,7 +73,12 @@ export const DataProvider = ({ children }) => {
     setRecentHubCount(hubs.size);
   };
 
-  const handleGetEvidence = (data) => {
+  const handleGetEvidence = (data, flag) => {
+    if (flag) {
+      const newEvidenceData = { globalCount: data.global_count, hubCount: data.hub_count, userCount: data.user_count };
+      setEvidenceData(newEvidenceData);
+      data = data.evidence_list;
+    }
     const list = [];
     const recentList = [];
     data.length && data.forEach((evidence) => {
@@ -111,7 +116,7 @@ export const DataProvider = ({ children }) => {
   const handleUserLogin = () => {
     axiosInstance.get("/evidence/")
       .then((response) => {
-        setEvidenceData(response.data);
+        handleGetEvidence(response.data, true);
       })
       .catch((error) => {
         console.log(error);

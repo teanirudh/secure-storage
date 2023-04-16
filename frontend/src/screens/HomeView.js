@@ -4,31 +4,11 @@ import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import CustomTable from "../components/CustomTable";
-import AuthContext from "../contexts/AuthContext";
 import DataContext from "../contexts/DataContext";
-
-const evidenceTableColumns = [
-  {
-    key: "id",
-    name: "Evidence ID",
-    width: "30%",
-  },
-  {
-    key: "uploader_id",
-    name: "Uploader ID",
-    width: "30%",
-  },
-  {
-    key: "upload_time",
-    name: "Upload Time",
-    width: "40%",
-  },
-];
+import EvidenceView from "./EvidenceView";
 
 const HomeView = () => {
-  const { user } = useContext(AuthContext);
-  const { evidenceCount, recentEvidenceList, recentEvidenceCount } = useContext(DataContext);
+  const { evidenceData } = useContext(DataContext);
 
   return (
     <Box sx={{ flexGrow: 1, margin: 10 }}>
@@ -51,32 +31,55 @@ const HomeView = () => {
                 alignItems: "center",
               }}
             >
-              <Typography sx={{ fontSize: 14 }} gutterBottom>
-                Evidence
-              </Typography>
               <Typography sx={{ fontSize: 30 }} gutterBottom>
-                {evidenceCount}
+                {evidenceData.globalCount}
               </Typography>
               <Typography sx={{ fontSize: 12 }} color="green" gutterBottom>
-                {recentEvidenceCount} added in the last day
+                Evidence added by all users
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item>
+          <Card sx={{ width: 275 }}>
+            <CardContent
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography sx={{ fontSize: 30 }} gutterBottom>
+                {evidenceData.hubCount}
+              </Typography>
+              <Typography sx={{ fontSize: 12 }} color="green" gutterBottom>
+                Evidence added by users from your hub
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item>
+          <Card sx={{ width: 275 }}>
+            <CardContent
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography sx={{ fontSize: 30 }} gutterBottom>
+                {evidenceData.userCount}
+              </Typography>
+              <Typography sx={{ fontSize: 12 }} color="green" gutterBottom>
+                Evidence added by you
               </Typography>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
-      <Grid container spacing={2} marginTop={10}>
-        <Grid item xs={3}>
-        </Grid>
-        <Grid item xs={6}>
-          <CustomTable
-            columns={evidenceTableColumns}
-            values={recentEvidenceList}
-            emptyMessage={user.view_level !== "NONE" ? "No recent upload activity" : "You are not authorized to view evidence"}
-          />
-        </Grid>
-        <Grid item xs={3}>
-        </Grid>
-      </Grid>
+      <EvidenceView />
     </Box>
   );
 };
