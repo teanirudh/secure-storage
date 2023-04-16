@@ -66,9 +66,10 @@ export const DataProvider = ({ children }) => {
         hubs.set(user.hub_id, true);
       }
     });
+    recentList.sort((a, b) => dayjs(b.last_login).diff(dayjs(a.last_login)));
     setUserList(list);
     setUserCount(list.length);
-    setRecentUserList(recentList);
+    setRecentUserList(recentList.slice(0, 3));
     setRecentUserCount(recentList.length);
     setRecentHubCount(hubs.size);
   };
@@ -89,9 +90,10 @@ export const DataProvider = ({ children }) => {
         recentList.push(newEvidence);
       }
     });
+    recentList.sort((a, b) => dayjs(b.upload_time).diff(dayjs(a.upload_time)));
     setEvidenceList(list);
     setEvidenceCount(list.length);
-    setRecentEvidenceList(recentList);
+    setRecentEvidenceList(recentList.slice(0, 3));
     setRecentEvidenceCount(recentList.length);
   };
 

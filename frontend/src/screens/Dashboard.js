@@ -136,7 +136,7 @@ const Dashboard = () => {
           </Card>
         </Grid>
       </Grid>
-      <Grid container spacing={2} marginTop={10}>
+      <Grid container spacing={2} marginTop={7}>
         <Grid item xs={6}>
           <Typography sx={{ fontSize: 18 }} gutterBottom>
             Recent user activity
