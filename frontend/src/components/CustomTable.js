@@ -10,6 +10,14 @@ import Paper from "@mui/material/Paper";
 
 
 export default function CustomTable({ columns, values, emptyMessage }) {
+  if (values.length === 0) {
+    return (
+      <Typography variant="h6" align="center" color="textSecondary" sx={{ fontSize: 16 }}>
+        {emptyMessage}
+      </Typography>
+    );
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -30,11 +38,6 @@ export default function CustomTable({ columns, values, emptyMessage }) {
           ))}
         </TableBody>
       </Table>
-      {values.length === 0 && (
-        <Typography variant="h8" align="center" style={{ fontStyle: 'italic', alignItems: 'center', margin: '10px', justifyContent: "center" }}>
-          {emptyMessage}
-        </Typography>
-      )}
     </TableContainer>
   );
-}
+};

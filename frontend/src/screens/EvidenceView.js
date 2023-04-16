@@ -4,6 +4,7 @@ import { Box } from "@mui/system";
 import DownloadIcon from '@mui/icons-material/Download';
 import CustomTable from "../components/CustomTable";
 import AddEvidence from "../components/AddEvidence";
+import AuthContext from "../contexts/AuthContext";
 import DataContext from "../contexts/DataContext";
 import useAxios from "../utils/useAxios";
 
@@ -47,6 +48,7 @@ const evidenceTableColumns = [
 
 const EvidenceView = () => {
   const axiosInstance = useAxios();
+  const { user } = useContext(AuthContext);
   const { evidenceList } = useContext(DataContext);
 
   const downloadEvidence = async (id, file_name) => {
@@ -99,7 +101,15 @@ const EvidenceView = () => {
         <Button onClick={handleOpen}>+ Add Evidence</Button>
       </Box>
       <Divider sx={{ marginBottom: 5 }} />
-      <CustomTable columns={evidenceTableColumns} values={evidenceList} />
+      <CustomTable
+        columns={evidenceTableColumns}
+        values={evidenceList}
+        emptyMessage={
+          user.is_admin ?
+            "No evidence has been added" :
+            "You are not authorized to view any evidence"
+        }
+      />
       <AddEvidence
         openUserModal={openUserModal}
         handleClose={handleClose}

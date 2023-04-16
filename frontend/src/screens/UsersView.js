@@ -70,7 +70,11 @@ const UsersView = () => {
         <Button onClick={handleOpen}>+ Add User</Button>
       </Box>
       <Divider sx={{ marginBottom: 5 }} />
-      <CustomTable columns={userTableColumns} values={userList} />
+      <CustomTable
+        columns={userTableColumns}
+        values={userList}
+        emptyMessage="No users have been added"
+      />
       <AddUser
         openUserModal={openUserModal}
         handleClose={handleClose}

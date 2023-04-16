@@ -55,7 +55,11 @@ const HubsView = () => {
         <Button onClick={handleOpen}>+ Add Hub</Button>
       </Box>
       <Divider sx={{ marginBottom: 5 }} />
-      <CustomTable columns={hubTableColumns} values={hubList} />
+      <CustomTable
+        columns={hubTableColumns}
+        values={hubList}
+        emptyMessage="No hubs have been added"
+      />
       <AddHub
         openUserModal={openUserModal}
         handleClose={handleClose}

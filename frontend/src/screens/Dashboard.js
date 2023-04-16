@@ -6,6 +6,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import CustomTable from "../components/CustomTable";
 import DataContext from "../contexts/DataContext";
+import { Divider } from "@mui/material";
 
 const userTableColumns = [
   {
@@ -137,6 +138,10 @@ const Dashboard = () => {
       </Grid>
       <Grid container spacing={2} marginTop={10}>
         <Grid item xs={6}>
+          <Typography sx={{ fontSize: 18 }} gutterBottom>
+            Recent user activity
+          </Typography>
+          <Divider sx={{ marginBottom: 3 }} />
           <CustomTable
             columns={userTableColumns}
             values={recentUserList}
@@ -144,10 +149,14 @@ const Dashboard = () => {
           />
         </Grid>
         <Grid item xs={6}>
+          <Typography sx={{ fontSize: 18 }} gutterBottom>
+            Recent evidence uploads
+          </Typography>
+          <Divider sx={{ marginBottom: 3 }} />
           <CustomTable
             columns={evidenceTableColumns}
             values={recentEvidenceList}
-            emptyMessage="No recent upload activity"
+            emptyMessage="No recent evidence uploads"
           />
         </Grid>
       </Grid>
