@@ -47,7 +47,7 @@ LOGGING = {
     },
 }
 
-CRONJOBS = [("0 3 * * 0", "base.tasks.run_tasks")]
+CRONJOBS = [("0 3 * * 0", "base.tasks.maintenance")]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (

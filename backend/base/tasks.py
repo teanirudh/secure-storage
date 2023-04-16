@@ -40,8 +40,8 @@ def reset_keys(password, salt):
     logger.info(f"END: Resetting keys")
 
 
-def solve(evidence, old_pwd, old_salt, new_pwd, new_salt):
-    logger.info(f"\nBEGIN: Solving evidence {evidence.id}")
+def resolve_evidence(evidence, old_pwd, old_salt, new_pwd, new_salt):
+    logger.info(f"\nBEGIN: Resolving evidence {evidence.id}")
     old_file_path = evidence.file_path
 
     data = decrypt_and_retrieve(old_file_path, old_pwd, old_salt)
@@ -51,10 +51,10 @@ def solve(evidence, old_pwd, old_salt, new_pwd, new_salt):
     evidence.save()
 
     os.remove(old_file_path)
-    logger.info(f"END: Solving evidence {evidence.id}")
+    logger.info(f"END: Resolving evidence {evidence.id}")
 
 
-def run_tasks():
+def maintenance():
     try:
         logger.info(f"\nBEGIN: Maintenance at {timezone.now()}\n")
         config = AutoConfig(settings.BASE_DIR / "base" / ".env")
@@ -71,7 +71,7 @@ def run_tasks():
 
         evidence_qs = Evidence.objects.all()
         for evidence in evidence_qs:
-            solve(evidence, old_pwd, old_salt, new_pwd, new_salt)
+            resolve_evidence(evidence, old_pwd, old_salt, new_pwd, new_salt)
 
         log.is_active = False
         log.old_pwd = old_pwd
