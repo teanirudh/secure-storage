@@ -77,15 +77,15 @@ export const DataProvider = ({ children }) => {
   const handleAdminLogin = () => {
     axiosInstance.get("/hubs/")
       .then((response) => {
-        handleGetHubs(response);
+        response.data.length && handleGetHubs(response);
         return axiosInstance.get("/users/")
       })
       .then((response) => {
-        handleGetUsers(response);
+        response.data.length && handleGetUsers(response);
         return axiosInstance.get("/evidence/")
       })
       .then((response) => {
-        handleGetEvidence(response);
+        response.data.length && handleGetEvidence(response);
       })
       .catch((error) => {
         console.log(error);
@@ -95,7 +95,7 @@ export const DataProvider = ({ children }) => {
   const handleUserLogin = () => {
     axiosInstance.get("/evidence/")
       .then((response) => {
-        handleGetEvidence(response);
+        response.data.length && handleGetEvidence(response);
       })
       .catch((error) => {
         console.log(error);

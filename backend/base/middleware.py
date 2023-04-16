@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from rest_framework import status
 from .models import MaintenanceLog
+from django.contrib.auth.models import AnonymousUser
 
 
 class RequestMiddleware:
@@ -11,14 +12,20 @@ class RequestMiddleware:
         under_maintenance = MaintenanceLog.objects.filter(is_active=True).exists()
         if under_maintenance:
             response = HttpResponse(
-                {
-                    "data": {
-                        "error": "System under maintenance. Please try again later."
-                    }
-                },
+                {"error": "Service Unavailable"},
                 status=status.HTTP_503_SERVICE_UNAVAILABLE,
             )
         else:
             response = self.get_response(request)
+
+        if isinstance(request.user, AnonymousUser):
+            return response
+
+        if request.path == "/hubs/" or request.path == "/users/":
+            if not request.user.is_admin:
+                response = HttpResponse(
+                    {"error": "Unauthorized"},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
 
         return response

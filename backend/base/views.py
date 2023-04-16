@@ -30,10 +30,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
 class HubView(APIView):
     def get(self, request):
         try:
-            if not request.user.is_admin:
-                return Response(
-                    {"error": "Unauthorized"}, status=status.HTTP_400_BAD_REQUEST
-                )
             hubs = Hub.objects.all()
             serializer = HubSerializer(hubs, many=True)
         except Exception as e:
@@ -146,7 +142,7 @@ class EvidenceView(APIView):
             evidence = []
             if view_level == "NONE":
                 return Response(
-                    {"error": "Unauthorized"}, status=status.HTTP_400_BAD_REQUEST
+                    {"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED
                 )
             elif view_level == "GBL":
                 evidence = Evidence.objects.all()
@@ -164,6 +160,11 @@ class EvidenceView(APIView):
 
     def post(self, request):
         try:
+            can_add = request.user.can_add
+            if not can_add:
+                return Response(
+                    {"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED
+                )
             logger.info(f"BEGIN: Add evidence")
             evidence = Evidence()
             evidence.name = request.POST.get("name")
@@ -198,6 +199,11 @@ class EvidenceView(APIView):
 class EvidenceDownloadView(APIView):
     def post(self, request):
         try:
+            view_level = request.user.view_level
+            if view_level == "NONE":
+                return Response(
+                    {"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED
+                )
             logger.info(f"BEGIN: Evidence download")
             id = request.data["id"]
             evidence = Evidence.objects.get(id=id)
