@@ -25,6 +25,13 @@ DB_USER="root"
 DB_PASSWORD="2580"
 DB_HOST="host.docker.internal"
 DB_PORT=3306
+
+cd secure-storage/base
+cat > .env
+
+SDJ_PWD="RF63LdDpXuLibiSQ"
+SDJ_SALT="vRt3vlL2"
+SDJ_DIR="/media/"
 ```
 
 ## Run the application
