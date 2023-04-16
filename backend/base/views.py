@@ -138,12 +138,16 @@ class UserView(APIView):
 class EvidenceView(APIView):
     def get(self, request):
         try:
+            if request.user.is_admin:
+                evidence = Evidence.objects.all()
+                serializer = EvidenceSerializer(evidence, many=True)
+                logger.info(f"SUCCESS: Evidence list sent")
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
             view_level = request.user.view_level
             evidence = []
             if view_level == "NONE":
-                return Response(
-                    {"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED
-                )
+                evidence = []
             elif view_level == "GBL":
                 evidence = Evidence.objects.all()
             elif view_level == "HUB":
@@ -151,12 +155,22 @@ class EvidenceView(APIView):
             elif view_level == "USER":
                 evidence = Evidence.objects.filter(user=request.user)
             serializer = EvidenceSerializer(evidence, many=True)
+
+            evidence_data = {}
+            evidence_data["evidence_list"] = serializer.data
+            evidence_data["global_count"] = Evidence.objects.all().count()
+            evidence_data["hub_count"] = Evidence.objects.filter(
+                hub=request.user.hub
+            ).count()
+            evidence_data["user_count"] = Evidence.objects.filter(
+                uploader=request.user
+            ).count()
         except Exception as e:
             logger.error(f"ERROR: {e}")
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            logger.info(f"SUCCESS: Evidence list sent")
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            logger.info(f"SUCCESS: Evidence data sent")
+            return Response(evidence_data, status=status.HTTP_200_OK)
 
     def post(self, request):
         try:

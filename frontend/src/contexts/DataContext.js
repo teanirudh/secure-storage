@@ -12,6 +12,7 @@ export const DataProvider = ({ children }) => {
   const { user } = useContext(AuthContext);
   const [loggedIn, setLoggedIn] = useState(false);
 
+  const [evidenceData, setEvidenceData] = useState({});
   const [hubList, setHubList] = useState([]);
   const [hubCount, setHubCount] = useState(0);
   const [recentHubCount, setRecentHubCount] = useState(0);
@@ -26,20 +27,20 @@ export const DataProvider = ({ children }) => {
   const [recentEvidenceList, setRecentEvidenceList] = useState([]);
   const [recentEvidenceCount, setRecentEvidenceCount] = useState(0);
 
-  const handleGetHubs = (response) => {
+  const handleGetHubs = (data) => {
     const list = [];
-    response.data.forEach((hub) => {
+    data.length && data.forEach((hub) => {
       list.push(hub);
     });
     setHubList(list);
     setHubCount(list.length);
   };
 
-  const handleGetUsers = (response) => {
+  const handleGetUsers = (data) => {
     const list = [];
     const recentList = [];
     const hubs = new Map();
-    response.data.forEach((user) => {
+    data.length && data.forEach((user) => {
       const canAdd = user.can_add ? "Yes" : "No";
       const canView = user.can_view ? "Yes" : "No";
       const lastLogin = dayjs(user.last_login).format("ddd MMM DD hh:mm:ss");
@@ -57,10 +58,10 @@ export const DataProvider = ({ children }) => {
     setRecentHubCount(hubs.size);
   };
 
-  const handleGetEvidence = (response) => {
+  const handleGetEvidence = (data) => {
     const list = [];
     const recentList = [];
-    response.data.forEach((evidence) => {
+    data.length && data.forEach((evidence) => {
       const uploadTime = dayjs(evidence.upload_time).format("ddd MMM DD hh:mm:ss");
       const newEvidence = { ...evidence, "upload_time": uploadTime };
       list.push(newEvidence);
@@ -77,15 +78,15 @@ export const DataProvider = ({ children }) => {
   const handleAdminLogin = () => {
     axiosInstance.get("/hubs/")
       .then((response) => {
-        response.data.length && handleGetHubs(response);
+        handleGetHubs(response.data);
         return axiosInstance.get("/users/")
       })
       .then((response) => {
-        response.data.length && handleGetUsers(response);
+        handleGetUsers(response.data);
         return axiosInstance.get("/evidence/")
       })
       .then((response) => {
-        response.data.length && handleGetEvidence(response);
+        handleGetEvidence(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -95,7 +96,7 @@ export const DataProvider = ({ children }) => {
   const handleUserLogin = () => {
     axiosInstance.get("/evidence/")
       .then((response) => {
-        response.data.length && handleGetEvidence(response);
+        setEvidenceData(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -112,6 +113,7 @@ export const DataProvider = ({ children }) => {
   };
 
   let contextData = {
+    evidenceData,
     hubList,
     hubCount,
     recentHubCount,
