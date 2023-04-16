@@ -49,7 +49,6 @@ export const AuthProvider = ({ children }) => {
     navigate("/login");
   };
 
-
   let contextData = {
     user: user,
     setUser: setUser,
@@ -72,4 +71,4 @@ export const AuthProvider = ({ children }) => {
       {loading ? null : children}
     </AuthContext.Provider >
   )
-}
+};

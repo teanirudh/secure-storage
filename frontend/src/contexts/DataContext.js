@@ -27,6 +27,21 @@ export const DataProvider = ({ children }) => {
   const [recentEvidenceList, setRecentEvidenceList] = useState([]);
   const [recentEvidenceCount, setRecentEvidenceCount] = useState(0);
 
+  const cleanData = () => {
+    setEvidenceData({});
+    setHubList([]);
+    setHubCount(0);
+    setRecentHubCount(0);
+    setUserList([]);
+    setUserCount(0);
+    setRecentUserList([]);
+    setRecentUserCount(0);
+    setEvidenceList([]);
+    setEvidenceCount(0);
+    setRecentEvidenceList([]);
+    setRecentEvidenceCount(0);
+  };
+
   const handleGetHubs = (data) => {
     const list = [];
     data.length && data.forEach((hub) => {
@@ -130,6 +145,7 @@ export const DataProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    if (!user) cleanData();
     if (loggedIn) {
       handleLogin();
       setLoggedIn(false);
@@ -144,4 +160,4 @@ export const DataProvider = ({ children }) => {
       {children}
     </DataContext.Provider>
   )
-}
+};
