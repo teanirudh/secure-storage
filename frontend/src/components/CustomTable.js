@@ -8,8 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-
-export default function CustomTable({ columns, values, emptyMessage }) {
+const CustomTable = ({ columns, values, emptyMessage }) => {
   if (values.length === 0) {
     return (
       <Typography variant="h6" align="center" color="textSecondary" sx={{ fontSize: 16 }}>
@@ -41,3 +40,5 @@ export default function CustomTable({ columns, values, emptyMessage }) {
     </TableContainer>
   );
 };
+
+export default CustomTable;

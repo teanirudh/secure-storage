@@ -160,7 +160,7 @@ export const DataProvider = ({ children }) => {
     else {
       setLoggedIn(true);
     }
-  }, [user]);
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <DataContext.Provider value={contextData}>

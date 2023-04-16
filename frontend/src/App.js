@@ -21,13 +21,30 @@ function App() {
             <DataProvider>
               <CustomAppBar />
               <Routes>
-                <Route path="/login" element={<LoginView />} />
-                <Route path="/" element={<PrivateRoute adminComponent={<Dashboard />} userComponent={<HomeView />} />} exact />
-                <Route path="/dashboard" element={<PrivateRoute adminComponent={<Dashboard />} userComponent={<HomeView />} />} />
-                <Route path="/hubs" element={<PrivateRoute adminComponent={<HubsView />} userComponent={<HomeView />} />} />
-                <Route path="/users" element={<PrivateRoute adminComponent={<UsersView />} userComponent={<HomeView />} />} />
-                <Route path="/evidence" element={<PrivateRoute adminComponent={<EvidenceView />} userComponent={<HomeView />} />} />
-                <Route path="*" element={<Navigate to="/dashboard" />} />
+                <Route
+                  path="/login"
+                  element={<LoginView />}
+                />
+                <Route
+                  path="/dashboard"
+                  element={<PrivateRoute adminComponent={<Dashboard />} userComponent={<HomeView />} />}
+                />
+                <Route
+                  path="/hubs"
+                  element={<PrivateRoute adminComponent={<HubsView />} userComponent={<Navigate to="/dashboard" />} />}
+                />
+                <Route
+                  path="/users"
+                  element={<PrivateRoute adminComponent={<UsersView />} userComponent={<Navigate to="/dashboard" />} />}
+                />
+                <Route
+                  path="/evidence"
+                  element={<PrivateRoute adminComponent={<EvidenceView />} userComponent={<Navigate to="/dashboard" />} />}
+                />
+                <Route
+                  path="*"
+                  element={<Navigate to="/dashboard" />}
+                />
               </Routes>
             </DataProvider>
           </AuthProvider>
