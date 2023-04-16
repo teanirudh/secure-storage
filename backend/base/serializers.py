@@ -10,6 +10,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         token["username"] = user.username
         token["is_admin"] = user.is_admin
+        token["can_add"] = user.can_add
         token["view_level"] = user.view_level
         token["hub_id"] = user.hub_id
         return token

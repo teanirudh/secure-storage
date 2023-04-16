@@ -75,7 +75,7 @@ const EvidenceView = () => {
   evidenceList.forEach((evidence) => {
     evidence.download =
       <Button
-        sx={{ height: 5, "&:hover": { backgroundColor: "transparent" } }}
+        sx={{ minWidth: 0, padding: 0 }}
         onClick={() => downloadEvidence(evidence.id, evidence.file_name)}
       >
         <DownloadIcon />
@@ -98,7 +98,7 @@ const EvidenceView = () => {
         <Typography sx={{ fontSize: 20 }} gutterBottom>
           Evidence
         </Typography>
-        <Button onClick={handleOpen}>+ Add Evidence</Button>
+        <Button onClick={handleOpen} disabled={!user.can_add}>+ Add Evidence</Button>
       </Box>
       <Divider sx={{ marginBottom: 5 }} />
       <CustomTable

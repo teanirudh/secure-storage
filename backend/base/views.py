@@ -12,8 +12,12 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import Evidence, Hub, User
-from .serializers import (EvidenceSerializer, HubSerializer,
-                          MyTokenObtainPairSerializer, UserSerializer)
+from .serializers import (
+    EvidenceSerializer,
+    HubSerializer,
+    MyTokenObtainPairSerializer,
+    UserSerializer,
+)
 from .utils import decrypt_and_retrieve, encrypt_and_save, generate_hash
 
 logger = logging.getLogger(__name__)
@@ -171,8 +175,7 @@ class EvidenceView(APIView):
 
     def post(self, request):
         try:
-            can_add = request.user.can_add
-            if not can_add:
+            if not request.user.can_add:
                 return Response(
                     {"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED
                 )

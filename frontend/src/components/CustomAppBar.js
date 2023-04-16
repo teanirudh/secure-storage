@@ -19,6 +19,7 @@ import Drawer from "@mui/material/Drawer";
 import AuthContext from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Grid } from "@mui/material";
+import Tooltip from '@mui/material/Tooltip';
 
 const CustomAppBar = () => {
   const { user, logoutUser } = useContext(AuthContext);
@@ -92,7 +93,7 @@ const CustomAppBar = () => {
           <Grid item xs={1}>
             <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
               {user && (
-                <IconButton onClick={user.is_admin ? toggleDrawer("left", true) : () => { }}>
+                <IconButton onClick={user.is_admin ? toggleDrawer("left", true) : () => { }} disabled={!user.is_admin}>
                   <MenuIcon />
                 </IconButton>
               )}
@@ -106,9 +107,11 @@ const CustomAppBar = () => {
           <Grid item xs={1}>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} display="none">
               {user && (
-                <IconButton onClick={logoutUser}>
-                  <LogoutIcon />
-                </IconButton>
+                <Tooltip title="Logout" placement="left">
+                  <IconButton onClick={logoutUser}>
+                    <LogoutIcon />
+                  </IconButton>
+                </Tooltip>
               )}
             </Box>
           </Grid>
@@ -118,6 +121,7 @@ const CustomAppBar = () => {
         anchor={"left"}
         open={state["left"]}
         onClose={toggleDrawer("left", false)}
+        PaperProps={{ sx: { width: 175 } }}
       >
         {list("left")}
       </Drawer>
