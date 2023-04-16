@@ -1,7 +1,8 @@
+from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
 from rest_framework import status
+
 from .models import MaintenanceLog
-from django.contrib.auth.models import AnonymousUser
 
 
 class RequestMiddleware:

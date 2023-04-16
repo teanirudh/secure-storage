@@ -1,6 +1,7 @@
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.serializers import ModelSerializer
-from .models import User, Hub, Evidence
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+from .models import Evidence, Hub, User
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import User, Hub, Evidence
+
+from .models import Evidence, Hub, User
 
 admin.site.register(User)
 admin.site.register(Hub)

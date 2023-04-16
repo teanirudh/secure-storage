@@ -1,12 +1,14 @@
-import os
-import string
-import secrets
 import logging
-from django.utils import timezone
-from django.conf import settings
+import os
+import secrets
+import string
+
 from decouple import AutoConfig
+from django.conf import settings
+from django.utils import timezone
+
 from .models import Evidence, MaintenanceLog
-from .utils import encrypt_and_save, decrypt_and_retrieve
+from .utils import decrypt_and_retrieve, encrypt_and_save
 
 logger = logging.getLogger(__name__)
 

@@ -1,23 +1,20 @@
-import magic
 import logging
-from django.utils import timezone
-from rest_framework import status
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.decorators import permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.views import TokenObtainPairView
+
+import magic
 from django.contrib.auth.hashers import make_password
 from django.db.models import F
+from django.utils import timezone
+from rest_framework import status
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .utils import generate_hash, encrypt_and_save, decrypt_and_retrieve
-from .models import User, Hub, Evidence
-from .serializers import (
-    HubSerializer,
-    UserSerializer,
-    EvidenceSerializer,
-    MyTokenObtainPairSerializer,
-)
+from .models import Evidence, Hub, User
+from .serializers import (EvidenceSerializer, HubSerializer,
+                          MyTokenObtainPairSerializer, UserSerializer)
+from .utils import decrypt_and_retrieve, encrypt_and_save, generate_hash
 
 logger = logging.getLogger(__name__)
 

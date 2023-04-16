@@ -1,16 +1,17 @@
 import base64
 import hashlib
+import logging
 import os
+import secrets
 import stat
 import string
-import secrets
-import logging
-from decouple import AutoConfig
-from django.conf import settings
+
 from cryptography.fernet import Fernet
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from decouple import AutoConfig
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
