@@ -43,7 +43,8 @@ const useAxios = () => {
         logoutUser();
         window.alert("System under maintenance. Please try again later.");
       }
-      return error;
+      else
+        return Promise.reject(error);
     });
 
   return axiosInstance;

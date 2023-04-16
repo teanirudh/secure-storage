@@ -33,16 +33,16 @@ const AddEvidence = (props) => {
     }
     const headers = { 'Content-Type': 'multipart/form-data' };
     await axiosInstance.post("/evidence/", body, { headers: headers })
-      .then((res) => {
-        alert(res.data.success);
+      .then((response) => {
+        alert(response.data.success);
         clearForm();
         handleClose();
         window.location.reload(false);
       })
-      .catch((err) => {
-        alert(err.response.data.error);
+      .catch((error) => {
+        alert(error.response.data.error);
       });
-  }
+  };
 
   return (
     <Modal

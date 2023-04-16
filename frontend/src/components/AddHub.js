@@ -26,16 +26,16 @@ const AddHub = (props) => {
       description: description,
     }
     await axiosInstance.post("/hubs/", body)
-      .then((res) => {
-        alert(res.data.success);
+      .then((response) => {
+        alert(response.data.success);
         clearForm();
         handleClose();
         window.location.reload(false);
       })
-      .catch((err) => {
-        alert(err.response.data.error);
+      .catch((error) => {
+        alert(error.response.data.error);
       });
-  }
+  };
 
   return (
     <Modal

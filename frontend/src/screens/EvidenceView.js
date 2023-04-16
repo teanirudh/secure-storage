@@ -51,8 +51,12 @@ const EvidenceView = () => {
 
   const downloadEvidence = async (id, file_name) => {
     await axiosInstance.post('/evidence/download/', { id: id })
-      .then((res) => { if (res.status === 200) downloadFile(res.data, file_name); })
-      .catch((err) => { alert(err.response.data.error); });
+      .then((response) => {
+        downloadFile(response.data, file_name);
+      })
+      .catch((error) => {
+        alert(error.response.data.error);
+      });
   };
 
   const downloadFile = (data, file_name) => {
