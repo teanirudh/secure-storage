@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import AuthContext from '../contexts/AuthContext';
 
-const Login = () => {
+const LoginView = () => {
   const { loginUser } = useContext(AuthContext);
 
   return (
@@ -92,4 +92,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginView;

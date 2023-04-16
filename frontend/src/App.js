@@ -5,13 +5,12 @@ import { DataProvider } from "./contexts/DataContext";
 import PrivateRoute from "./utils/PrivateRoute";
 import { theme } from "./utils/ThemeProvider";
 import CustomAppBar from "./components/CustomAppBar";
-import Login from "./screens/Login";
-import AdminDashboard from "./screens/AdminDashboard";
-import AdminViewUsers from "./screens/AdminViewUsers";
-import AdminViewEvidence from "./screens/AdminViewEvidence";
-import AdminViewHubs from "./screens/AdminViewHubs";
-import UserDashboard from "./screens/UserDashboard";
-import UserViewEvidence from "./screens/UserViewEvidence";
+import LoginView from "./screens/LoginView";
+import Dashboard from "./screens/Dashboard";
+import HubsView from "./screens/HubsView";
+import UsersView from "./screens/UsersView";
+import EvidenceView from "./screens/EvidenceView";
+import HomeView from "./screens/HomeView";
 
 function App() {
   return (
@@ -22,12 +21,12 @@ function App() {
             <DataProvider>
               <CustomAppBar />
               <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/" element={<PrivateRoute adminComponent={<AdminDashboard />} userComponent={<UserDashboard />} />} exact />
-                <Route path="/dashboard" element={<PrivateRoute adminComponent={<AdminDashboard />} userComponent={<UserDashboard />} />} />
-                <Route path="/hubs" element={<PrivateRoute adminComponent={<AdminViewHubs />} userComponent={<UserDashboard />} />} />
-                <Route path="/users" element={<PrivateRoute adminComponent={<AdminViewUsers />} userComponent={<UserDashboard />} />} />
-                <Route path="/evidence" element={<PrivateRoute adminComponent={<AdminViewEvidence />} userComponent={<UserViewEvidence />} />} />
+                <Route path="/login" element={<LoginView />} />
+                <Route path="/" element={<PrivateRoute adminComponent={<Dashboard />} userComponent={<HomeView />} />} exact />
+                <Route path="/dashboard" element={<PrivateRoute adminComponent={<Dashboard />} userComponent={<HomeView />} />} />
+                <Route path="/hubs" element={<PrivateRoute adminComponent={<HubsView />} userComponent={<HomeView />} />} />
+                <Route path="/users" element={<PrivateRoute adminComponent={<UsersView />} userComponent={<HomeView />} />} />
+                <Route path="/evidence" element={<PrivateRoute adminComponent={<EvidenceView />} userComponent={<HomeView />} />} />
                 <Route path="*" element={<Navigate to="/dashboard" />} />
               </Routes>
             </DataProvider>

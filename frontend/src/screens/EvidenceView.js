@@ -45,7 +45,7 @@ const evidenceTableColumns = [
   }
 ];
 
-const AdminViewEvidence = () => {
+const EvidenceView = () => {
   const axiosInstance = useAxios();
   const { evidenceList } = useContext(DataContext);
 
@@ -83,7 +83,6 @@ const AdminViewEvidence = () => {
           alignItems: "center",
         }}
       >
-
         <Typography sx={{ fontSize: 20 }} gutterBottom>
           Evidence
         </Typography>
@@ -99,4 +98,4 @@ const AdminViewEvidence = () => {
   );
 };
 
-export default AdminViewEvidence;
+export default EvidenceView;

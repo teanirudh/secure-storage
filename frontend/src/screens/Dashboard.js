@@ -24,6 +24,7 @@ const userTableColumns = [
     width: "40%",
   },
 ];
+
 const evidenceTableColumns = [
   {
     key: "id",
@@ -42,7 +43,7 @@ const evidenceTableColumns = [
   },
 ];
 
-const AdminDashboard = () => {
+const Dashboard = () => {
   const {
     hubCount,
     recentHubCount,
@@ -154,4 +155,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default Dashboard;

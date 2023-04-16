@@ -26,7 +26,7 @@ const evidenceTableColumns = [
   },
 ];
 
-const UserDashboard = () => {
+const HomeView = () => {
   const { user } = useContext(AuthContext);
   const { evidenceCount, recentEvidenceList, recentEvidenceCount } = useContext(DataContext);
 
@@ -81,4 +81,4 @@ const UserDashboard = () => {
   );
 };
 
-export default UserDashboard;
+export default HomeView;

@@ -2,54 +2,39 @@ import React, { useState, useContext } from "react";
 import { Button, Divider, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import CustomTable from "../components/CustomTable";
-import AddUser from "../components/AddUser";
+import AddHub from "../components/AddHub";
 import DataContext from "../contexts/DataContext";
 
-const userTableColumns = [
+const hubTableColumns = [
   {
     key: "id",
-    name: "User ID",
-    width: "10%",
-  },
-  {
-    key: "username",
-    name: "Username",
-    width: "10%",
-  },
-  {
-    key: "email",
-    name: "Email",
-    width: "20%",
-  },
-  {
-    key: "hub_id",
     name: "Hub ID",
-    width: "10%",
-  },
-  {
-    key: "can_add",
-    name: "Can Add",
-    width: "10%",
-  },
-  {
-    key: "can_view",
-    name: "Can View",
-    width: "10%",
-  },
-  {
-    key: "view_level",
-    name: "View Level",
-    width: "10%",
-  },
-  {
-    key: "last_login",
-    name: "Last login",
     width: "20%",
+  },
+  {
+    key: "name",
+    name: "Name",
+    width: "20%",
+  },
+  {
+    key: "description",
+    name: "Description",
+    width: "30%",
+  },
+  {
+    key: "user_count",
+    name: "User Count",
+    width: "15%",
+  },
+  {
+    key: "evidence_count",
+    name: "Evidence Count",
+    width: "15%",
   },
 ];
 
-const AdminViewUsers = () => {
-  const { userList } = useContext(DataContext);
+const HubsView = () => {
+  const { hubList } = useContext(DataContext);
 
   const [openUserModal, setOpenUserModal] = useState(false);
   const handleOpen = () => { setOpenUserModal(true); };
@@ -65,13 +50,13 @@ const AdminViewUsers = () => {
         }}
       >
         <Typography sx={{ fontSize: 20 }} gutterBottom>
-          Users
+          Hubs
         </Typography>
-        <Button onClick={handleOpen}>+ Add User</Button>
+        <Button onClick={handleOpen}>+ Add Hub</Button>
       </Box>
       <Divider sx={{ marginBottom: 5 }} />
-      <CustomTable columns={userTableColumns} values={userList} />
-      <AddUser
+      <CustomTable columns={hubTableColumns} values={hubList} />
+      <AddHub
         openUserModal={openUserModal}
         handleClose={handleClose}
       />
@@ -79,4 +64,4 @@ const AdminViewUsers = () => {
   );
 };
 
-export default AdminViewUsers;
+export default HubsView;
