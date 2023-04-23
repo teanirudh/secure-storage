@@ -2,6 +2,7 @@ import logging
 
 import magic
 from django.contrib.auth.hashers import make_password
+from django.db import transaction
 from django.db.models import F
 from django.utils import timezone
 from rest_framework import status
@@ -12,12 +13,8 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import Evidence, Hub, User
-from .serializers import (
-    EvidenceSerializer,
-    HubSerializer,
-    MyTokenObtainPairSerializer,
-    UserSerializer,
-)
+from .serializers import (EvidenceSerializer, HubSerializer,
+                          MyTokenObtainPairSerializer, UserSerializer)
 from .utils import decrypt_and_retrieve, encrypt_and_save, generate_hash
 
 logger = logging.getLogger(__name__)
@@ -40,6 +37,7 @@ class HubView(APIView):
             logger.info(f"SUCCESS: Hub list sent")
             return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @transaction.atomic
     def post(self, request):
         try:
             logger.info(f"BEGIN: Add hub")
@@ -55,6 +53,7 @@ class HubView(APIView):
             logger.info(f"SUCCESS: Hub added")
             return Response({"success": "Hub added"}, status=status.HTTP_200_OK)
 
+    @transaction.atomic
     def patch(self, request):
         try:
             logger.info(f"BEGIN: Update hub")
@@ -85,6 +84,7 @@ class UserView(APIView):
             logger.info(f"SUCCESS: User list sent")
             return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @transaction.atomic
     def post(self, request):
         try:
             logger.info(f"BEGIN: Add user")
@@ -115,6 +115,7 @@ class UserView(APIView):
             logger.info(f"SUCCESS: User added")
             return Response({"success": "User added"}, status=status.HTTP_200_OK)
 
+    @transaction.atomic
     def patch(self, request):
         try:
             logger.info(f"BEGIN: Update user")
@@ -173,6 +174,7 @@ class EvidenceView(APIView):
             logger.info(f"SUCCESS: Evidence data sent")
             return Response(evidence_data, status=status.HTTP_200_OK)
 
+    @transaction.atomic
     def post(self, request):
         try:
             if not request.user.can_add:
