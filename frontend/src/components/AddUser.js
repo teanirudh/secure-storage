@@ -24,7 +24,7 @@ const AddUser = (props) => {
   const [viewLevel, setViewLevel] = useState("");
   const [hubId, setHubId] = useState("");
 
-  const viewLevelList = [{ id: "NONE", name: "None" }, { id: "SELF", name: "Self" }, { id: "HUB", name: "Hub" }, { id: "GBL", name: "Global" }];
+  const viewLevelList = [{ id: "NONE", name: "None" }, { id: "USER", name: "User" }, { id: "HUB", name: "Hub" }, { id: "GBL", name: "Global" }];
 
   const clearForm = () => {
     setUsername("");

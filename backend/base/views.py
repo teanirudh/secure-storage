@@ -13,8 +13,12 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import Evidence, Hub, User
-from .serializers import (EvidenceSerializer, HubSerializer,
-                          MyTokenObtainPairSerializer, UserSerializer)
+from .serializers import (
+    EvidenceSerializer,
+    HubSerializer,
+    MyTokenObtainPairSerializer,
+    UserSerializer,
+)
 from .utils import decrypt_and_retrieve, encrypt_and_save, generate_hash
 
 logger = logging.getLogger(__name__)
@@ -155,7 +159,7 @@ class EvidenceView(APIView):
             elif view_level == "HUB":
                 evidence = Evidence.objects.filter(hub=request.user.hub)
             elif view_level == "USER":
-                evidence = Evidence.objects.filter(user=request.user)
+                evidence = Evidence.objects.filter(uploader=request.user)
             serializer = EvidenceSerializer(evidence, many=True)
 
             evidence_data = {}

@@ -105,9 +105,9 @@ const EvidenceView = () => {
         columns={evidenceTableColumns}
         values={evidenceList}
         emptyMessage={
-          user.is_admin ?
-            "No evidence has been added" :
-            "You are not authorized to view any evidence"
+          user.view_level === "NONE" ?
+            "You are not authorized to view any evidence" :
+            "No evidence has been added"
         }
       />
       <AddEvidence
