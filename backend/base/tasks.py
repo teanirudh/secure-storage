@@ -71,7 +71,6 @@ def maintenance():
 
         new_pwd = generate_new_password()
         new_salt = generate_new_salt()
-        reset_keys(new_pwd, new_salt)
 
         evidence_qs = Evidence.objects.all()
         for evidence in evidence_qs:
@@ -82,7 +81,10 @@ def maintenance():
         log.old_salt = old_salt
         log.end_time = timezone.now()
         log.save()
+        reset_keys(new_pwd, new_salt)
 
         logger.info(f"\nEND: Maintenance at {timezone.now()}\n")
     except Exception as e:
+        log.is_active = False
+        log.save()
         logger.error(f"ERROR: {e}")
