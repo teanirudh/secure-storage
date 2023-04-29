@@ -70,7 +70,6 @@ def generate_file_name(file_dir):
     return file_name
 
 
-@transaction.atomic
 def encrypt(data, password=None, salt=None):
     logger.info(f"BEGIN: Encryption")
     key = generate_key(password, salt)
@@ -81,7 +80,6 @@ def encrypt(data, password=None, salt=None):
     return encrypted
 
 
-@transaction.atomic
 def decrypt(data, password=None, salt=None):
     logger.info(f"BEGIN: Decryption")
     key = generate_key(password, salt)
@@ -92,7 +90,6 @@ def decrypt(data, password=None, salt=None):
     return decrypted
 
 
-@transaction.atomic
 def save_file(data, file_dir, file_name, file_ext=""):
     logger.info(f"BEGIN: Saving file")
     file_path = "{}{}{}".format(file_dir, file_name, file_ext).replace("\\", "/")
@@ -106,7 +103,6 @@ def save_file(data, file_dir, file_name, file_ext=""):
     return file_path
 
 
-@transaction.atomic
 def encrypt_and_save(data, password=None, salt=None):
     config = AutoConfig(settings.BASE_DIR / "base" / ".env")
     encrypted = encrypt(data, password, salt)
@@ -118,7 +114,6 @@ def encrypt_and_save(data, password=None, salt=None):
     return file_path
 
 
-@transaction.atomic
 def decrypt_and_retrieve(file_path, password=None, salt=None):
     with open(file_path, "rb") as file:
         data = file.read()

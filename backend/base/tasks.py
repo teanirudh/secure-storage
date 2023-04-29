@@ -32,7 +32,6 @@ def generate_new_salt():
     return salt
 
 
-@transaction.atomic
 def reset_keys(password, salt):
     logger.info(f"BEGIN: Resetting keys")
     env = f'SDJ_PWD="{password}"\nSDJ_SALT="{salt}"\nSDJ_DIR="/media/"'
@@ -42,7 +41,6 @@ def reset_keys(password, salt):
     logger.info(f"END: Resetting keys")
 
 
-@transaction.atomic
 def resolve_evidence(evidence, old_pwd, old_salt, new_pwd, new_salt):
     logger.info(f"\nBEGIN: Resolving evidence {evidence.id}")
     old_file_path = evidence.file_path
@@ -57,7 +55,6 @@ def resolve_evidence(evidence, old_pwd, old_salt, new_pwd, new_salt):
     logger.info(f"END: Resolving evidence {evidence.id}")
 
 
-@transaction.atomic
 def maintenance():
     try:
         logger.info(f"\nBEGIN: Maintenance at {timezone.now()}\n")

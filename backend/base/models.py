@@ -102,8 +102,14 @@ class Evidence(models.Model):
         verbose_name_plural = "evidence"
 
 
+def gen_log_pk():
+    last_id = MaintenanceLog.objects.all().order_by("id").last()
+    last_id = last_id.id + 1 if last_id else 1
+    return last_id
+
+
 class MaintenanceLog(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.IntegerField(primary_key=True, default=gen_log_pk)
     is_active = models.BooleanField(default=True)
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(null=True)
